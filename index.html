@@ -160,14 +160,20 @@ section.block{padding:clamp(80px,11vw,150px) 0}
 .pc-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 40px}
 .pc-k{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px}
 .pc-col.ai .pc-k{color:var(--ink)}
-.pc-bar{display:flex;align-items:center;gap:14px}
-.pc-bar .track{flex:1;height:10px;border-radius:999px;background:rgba(13,13,13,.06);overflow:hidden}
-.pc-bar .fill{display:block;height:100%;width:var(--w);border-radius:inherit;background:#C9C7BF;transform:scaleX(0);transform-origin:left;transition:transform 1.3s var(--ease) .2s}
-.pc-col.ai .fill{background:var(--accent);transition-delay:.5s}
-.pc-row.in .fill{transform:scaleX(1)}
-.pc-bar .t{font-family:var(--mono);font-size:13px;white-space:nowrap;min-width:86px;text-align:right}
-.pc-col.ai .t{font-weight:600}
-.pc-col p{margin:12px 0 0;font-size:15px;color:var(--muted)}
+.pc-time{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:24px}
+.pc-time-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.pc-time-head .pc-k{margin:0}
+.pc-save{font-family:var(--mono);font-size:12px;font-weight:500;padding:5px 10px;border-radius:999px;background:var(--accent);color:var(--ink);white-space:nowrap}
+.pc-line{display:grid;grid-template-columns:92px minmax(0,1fr) 92px;gap:14px;align-items:center;padding:5px 0}
+.pc-line .who{font-size:14px;color:var(--muted)}
+.pc-line.ai .who{color:var(--ink);font-weight:500}
+.pc-line .b{display:block;height:14px}
+.pc-line .b i{display:block;height:100%;width:var(--w);min-width:8px;border-radius:4px;background:#C9C7BF;transform:scaleX(0);transform-origin:left;transition:transform 1.3s var(--ease) .2s}
+.pc-line.ai .b i{background:var(--accent);transition-delay:.55s}
+.pc-row.in .pc-line .b i{transform:scaleX(1)}
+.pc-line .t{font-family:var(--mono);font-size:13px;text-align:right;white-space:nowrap}
+.pc-line.ai .t{font-weight:600}
+.pc-col p{margin:0;font-size:15px;color:var(--muted)}
 .pc-col.ai p{color:var(--ink)}
 .pc-tools{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
 .pc-tools span{font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
@@ -284,6 +290,8 @@ section.block{padding:clamp(80px,11vw,150px) 0}
   .why,.faq,.case-sec,.pc-row,.pc-cols{grid-template-columns:minmax(0,1fr)}
   .pc-gain{margin-left:0}
   .pc-arrow{display:none}
+  .pc-line{grid-template-columns:76px minmax(0,1fr) 76px;gap:10px}
+  .pc-time{padding:16px}
   .case-meta{grid-template-columns:repeat(2,minmax(0,1fr))}
   .case-cover{aspect-ratio:4/3}
   .results,.gallery{grid-template-columns:minmax(0,1fr)}
@@ -400,7 +408,7 @@ section.block{padding:clamp(80px,11vw,150px) 0}
       <div><span class="label">AI-enabled</span><b id="pcAi"></b></div>
       <div class="pc-gain"><b id="pcGain"></b><span>faster to first release</span></div>
     </div>
-    <div class="pc-legend mono" aria-hidden="true"><span><i class="sw old"></i>Traditional process</span><span><i class="sw ai"></i>My AI-enabled process</span></div>
+    <div class="pc-legend mono"><span><i class="sw old"></i>Traditional process</span><span><i class="sw ai"></i>My AI-enabled process</span><span>Bar length = time a stage takes, on the same scale</span></div>
     <div id="processGrid"></div>
     <p class="pc-note mono">Typical timelines for a first release. Every project is different.</p>
   </div>
@@ -750,18 +758,31 @@ $("#workList").innerHTML = PROJECTS.map((p, i) => `
 /* ---------- process / why / stats ---------- */
 (() => {
   const maxW = Math.max(...PROCESS.flatMap(s => [s.old.w, s.ai.w]));
+  const pct = w => `${(w / maxW * 100).toFixed(1)}%`;
+  const line = (side, who, x) => `
+    <div class="pc-line ${side}"><span class="who">${who}</span><span class="b"><i style="--w:${pct(x.w)}"></i></span><span class="t">${x.time}</span></div>`;
   const col = (side, x) => `
     <div class="pc-col ${side}">
-      <div class="pc-k">${side === "ai" ? "AI-enabled" : "Traditional"}</div>
-      <div class="pc-bar"><span class="track"><span class="fill" style="--w:${(x.w / maxW * 100).toFixed(1)}%"></span></span><span class="t">${x.time}</span></div>
+      <div class="pc-k">${side === "ai" ? "With AI" : "Traditional"}</div>
       <p>${x.d}</p>
       <div class="pc-tools">${x.tools.map(t => `<span>${t}</span>`).join("")}</div>
     </div>`;
-  $("#processGrid").innerHTML = PROCESS.map((s, i) => `
+  $("#processGrid").innerHTML = PROCESS.map((s, i) => {
+    const save = s.cycle
+      ? `${Math.round(s.old.w / s.ai.w)}× faster loop`
+      : `${Math.round((1 - s.ai.w / s.old.w) * 100)}% less time`;
+    return `
     <div class="pc-row reveal">
       <div class="pc-stage"><span class="mono">[${pad(i + 1)}]</span><h3>${s.t}</h3></div>
-      <div class="pc-cols">${col("old", s.old)}${col("ai", s.ai)}</div>
-    </div>`).join("");
+      <div>
+        <div class="pc-time" role="group" aria-label="${s.t}: ${s.old.time} traditionally, ${s.ai.time} with AI">
+          <div class="pc-time-head"><span class="pc-k">${s.cycle ? "Time between updates" : "Time taken"}</span><span class="pc-save">${save}</span></div>
+          ${line("old", "Traditional", s.old)}${line("ai", "With AI", s.ai)}
+        </div>
+        <div class="pc-cols">${col("old", s.old)}${col("ai", s.ai)}</div>
+      </div>
+    </div>`;
+  }).join("");
   const sum = k => PROCESS.filter(s => !s.cycle).reduce((n, s) => n + s[k].w, 0);
   const o = sum("old"), a = sum("ai");
   $("#pcOld").textContent = `~${Math.round(o)} weeks`;
