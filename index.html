@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[Your Name] — AI-Enabled Product Builder</title>
+<meta name="description" content="AI-enabled product builder with 8+ years of turning ideas into shipped products.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#F3F2EE; --ink:#0D0D0D; --muted:#5C5C57; --line:#D9D7D0; --card:#FFFFFF;
+  --accent:#FF5A1F; --dark:#0D0D0D; --on-dark:#F3F2EE; --on-dark-muted:#A9A8A2;
+  --sans:"Inter Tight",system-ui,-apple-system,sans-serif;
+  --serif:"Instrument Serif",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+  --wrap:1320px; --pad:clamp(16px,4vw,40px);
+  --ease:cubic-bezier(.2,.7,.1,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body.locked{overflow:hidden}
+a{color:inherit}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--pad)}
+.mono{font-family:var(--mono);font-size:13px;letter-spacing:.02em}
+.label{font-family:var(--mono);font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.serif{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 22px;border-radius:999px;text-decoration:none;font-weight:500;border:1px solid var(--ink);background:var(--ink);color:var(--bg);transition:transform .3s var(--ease),background .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--bg)}
+.btn.accent{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+.btn .arr{transition:transform .3s var(--ease)}
+.btn:hover .arr{transform:translateX(4px)}
+
+/* ============ HEADER ============ */
+.header{position:fixed;inset:0 0 auto 0;z-index:50;transition:transform .4s var(--ease),background .3s,border-color .3s;border-bottom:1px solid transparent}
+.header.scrolled{background:rgba(243,242,238,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-color:var(--line)}
+.header.hide{transform:translateY(-100%)}
+.header .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;height:72px}
+.logo{font-weight:700;font-size:19px;text-decoration:none;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.logo-mark{width:28px;height:28px;border-radius:8px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-size:13px;font-family:var(--mono)}
+.nav{display:flex;align-items:center;gap:30px}
+.nav a{text-decoration:none;font-size:15px;position:relative}
+.nav a.link::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease)}
+.nav a.link:hover::after{transform:scaleX(1);transform-origin:left}
+.avail{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:#1DB954;position:relative;flex:none}
+.dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:inherit;animation:ping 2s infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.7}80%,100%{transform:scale(2.6);opacity:0}}
+.menu-btn{display:none;background:none;border:1px solid var(--ink);border-radius:999px;min-height:44px;padding:0 18px;font-size:15px}
+.header .btn{min-height:42px;padding:0 18px;font-size:15px}
+
+/* mobile menu */
+.mobile-menu{position:fixed;inset:0;z-index:60;background:var(--ink);color:var(--on-dark);padding:24px var(--pad);display:flex;flex-direction:column;transform:translateY(-100%);transition:transform .55s var(--ease);visibility:hidden}
+.mobile-menu.open{transform:none;visibility:visible}
+.mobile-menu .top{display:flex;justify-content:space-between;align-items:center;height:48px}
+.mobile-menu .close{background:none;border:1px solid var(--on-dark);border-radius:999px;min-height:44px;padding:0 18px}
+.mobile-menu nav{margin-top:48px;display:flex;flex-direction:column;gap:6px}
+.mobile-menu nav a{font-size:44px;font-weight:600;letter-spacing:-.03em;text-decoration:none;line-height:1.15}
+.mobile-menu .foot{margin-top:auto;display:flex;flex-direction:column;gap:16px}
+
+/* ============ HERO ============ */
+.hero{padding:clamp(130px,18vh,200px) 0 clamp(56px,8vw,96px)}
+.hero h1{margin:0;font-weight:600;font-size:clamp(52px,9.4vw,148px);line-height:.92;letter-spacing:-.05em}
+.hero h1 .serif{letter-spacing:-.02em}
+.rotator{display:inline-block;position:relative;color:var(--ink)}
+.rotator span{display:inline-block;transition:transform .5s var(--ease),opacity .5s var(--ease)}
+.rotator span.out{transform:translateY(-30%);opacity:0}
+.rotator span.pre{transform:translateY(30%);opacity:0;transition:none}
+.hero-bottom{margin-top:clamp(40px,6vw,72px);display:flex;flex-wrap:wrap;gap:32px 64px;align-items:flex-end;justify-content:space-between}
+.hero-bottom p{margin:0;max-width:520px;font-size:clamp(18px,1.6vw,21px);color:var(--muted)}
+.hero-bottom p strong{color:var(--ink);font-weight:500}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px}
+.hero-meta{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between}
+
+/* ============ MARQUEE ============ */
+.marquee{border-block:1px solid var(--line);overflow:hidden;padding:22px 0;background:var(--card)}
+.marquee-track{display:flex;gap:48px;width:max-content;animation:marq 38s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-item{display:flex;align-items:center;gap:48px;font-size:clamp(26px,3.4vw,44px);font-weight:500;letter-spacing:-.03em;white-space:nowrap}
+.marquee-item i{font-family:var(--serif);font-weight:400}
+.marquee-item .star{width:14px;height:14px;background:var(--accent);border-radius:50%}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ============ SECTIONS ============ */
+section.block{padding:clamp(80px,11vw,150px) 0}
+.sec-head{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end;margin-bottom:clamp(40px,5vw,64px)}
+.sec-head h2{margin:12px 0 0;font-weight:600;font-size:clamp(36px,5.2vw,76px);line-height:1;letter-spacing:-.045em;max-width:900px}
+.sec-head p{margin:0;max-width:380px;color:var(--muted)}
+
+/* ============ WORK INDEX ============ */
+.work-list{border-top:1px solid var(--ink)}
+.work-row{display:grid;grid-template-columns:70px minmax(0,1fr) 200px 80px 48px;gap:20px;align-items:center;padding:30px 0;border-bottom:1px solid var(--line);text-decoration:none;position:relative;transition:padding .45s var(--ease),color .3s}
+.work-row::before{content:"";position:absolute;inset:0;background:var(--ink);transform:scaleY(0);transform-origin:bottom;transition:transform .45s var(--ease);z-index:-1}
+.work-row:hover{color:var(--bg);padding-left:20px;padding-right:20px}
+.work-row:hover::before{transform:scaleY(1)}
+.work-row:hover .wr-cat,.work-row:hover .mono{color:var(--on-dark-muted)}
+.wr-title{font-size:clamp(28px,3.6vw,52px);font-weight:600;letter-spacing:-.04em;line-height:1.05}
+.wr-sum{display:block;font-size:16px;line-height:1.45;font-weight:400;letter-spacing:0;color:var(--muted);margin-top:6px;transition:color .3s}
+.work-row:hover .wr-sum{color:var(--on-dark-muted)}
+.wr-cat{font-size:15px;color:var(--muted);transition:color .3s}
+.wr-arrow{width:48px;height:48px;border-radius:50%;border:1px solid currentColor;display:grid;place-items:center;transition:transform .45s var(--ease),background .3s}
+.work-row:hover .wr-arrow{transform:rotate(-45deg);background:var(--accent);border-color:var(--accent);color:var(--ink)}
+.work-row .wr-thumb{display:none}
+.work-foot{margin-top:28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted)}
+
+/* cursor preview */
+.preview{position:fixed;left:0;top:0;width:340px;aspect-ratio:4/3;pointer-events:none;z-index:40;border-radius:14px;overflow:hidden;opacity:0;transform:translate(-50%,-50%) scale(.6);transition:opacity .3s,transform .4s var(--ease);box-shadow:0 30px 60px -20px rgba(0,0,0,.35)}
+.preview.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.preview .ph{width:100%;height:100%}
+
+
+/* product mock visual */
+.ph{position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:18px;background:var(--c,#E6E2D8);color:var(--ink);overflow:hidden}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph .ph-ui{flex:1;min-height:0;margin-top:14px;background:rgba(255,255,255,.72);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;font-size:12px;line-height:1.4;overflow:hidden}
+.ph .bar{height:8px;border-radius:4px;background:rgba(13,13,13,.12);flex:none}
+.ph .row{display:flex;gap:8px}
+.ph .tag{font-family:var(--mono);font-size:11px;display:flex;justify-content:space-between}
+.ph .bubble{max-width:82%;padding:8px 11px;border-radius:12px;background:#fff}
+.ph .bubble.me{align-self:flex-end;background:var(--ink);color:var(--bg)}
+.ph .bubble.ai{border:1px solid rgba(13,13,13,.1)}
+.ph .chipline{flex:1;min-width:0;font-family:var(--mono);font-size:10px;padding:6px 8px;border-radius:6px;background:rgba(13,13,13,.06);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph .ph-ui.phone{background:transparent;align-items:center;padding:0}
+.ph .screen{height:100%;aspect-ratio:9/16;max-width:62%;background:#fff;border:6px solid var(--ink);border-radius:22px;padding:12px;display:flex;flex-direction:column;gap:7px;box-sizing:border-box}
+.ph .rec{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px}
+.ph .rec span{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.ph .note{margin-top:4px;padding:8px;border-radius:8px;background:rgba(13,13,13,.05);display:flex;flex-direction:column;gap:5px;font-size:11px}
+.ph .sign{margin-top:auto;text-align:center;padding:6px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:11px}
+.ph .kpis{display:flex;gap:8px}
+.ph .kpis div{flex:1;padding:8px;border-radius:8px;background:#fff;font-size:10px;color:var(--muted)}
+.ph .kpis b{display:block;font-size:18px;color:var(--ink);letter-spacing:-.03em}
+.ph .bars{flex:1;display:flex;align-items:flex-end;gap:6px;min-height:40px}
+.ph .bars i{flex:1;border-radius:4px 4px 0 0;background:var(--ink);opacity:.82}
+
+/* ============ PROCESS ============ */
+.process{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;display:flex;flex-direction:column;min-height:300px;transition:transform .45s var(--ease),border-color .3s}
+.step:hover{transform:translateY(-6px);border-color:var(--ink)}
+.step .n{font-family:var(--mono);font-size:13px;display:flex;justify-content:space-between;color:var(--muted)}
+.step h3{margin:auto 0 0;font-size:26px;font-weight:600;letter-spacing:-.03em;line-height:1.1;padding-top:48px}
+.step p{margin:10px 0 0;color:var(--muted);font-size:15px}
+
+/* ============ ABOUT / WHY ============ */
+.why{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(40px,6vw,96px)}
+.why-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink)}
+.why-list li{display:flex;gap:18px;padding:22px 0;border-bottom:1px solid var(--line);font-size:clamp(19px,1.7vw,23px);letter-spacing:-.015em}
+.why-list li span:first-child{color:var(--accent);font-weight:600}
+
+/* ============ TESTIMONIALS ============ */
+.testi{background:var(--dark);color:var(--on-dark)}
+.testi .label{color:var(--on-dark-muted)}
+.t-viewport{overflow:hidden;touch-action:pan-y;cursor:grab}
+.t-viewport.drag{cursor:grabbing}
+.t-track{display:flex;transition:transform .6s var(--ease)}
+.t-slide{flex:0 0 100%;padding-right:8%}
+.t-slide blockquote{margin:0;font-size:clamp(28px,3.8vw,56px);line-height:1.12;letter-spacing:-.035em;font-weight:500;max-width:1100px}
+.t-slide blockquote .serif{color:var(--accent)}
+.t-who{margin-top:36px;display:flex;align-items:center;gap:16px}
+.t-avatar{width:52px;height:52px;border-radius:50%;background:#2A2A28;display:grid;place-items:center;font-family:var(--mono);font-size:14px}
+.t-who small{display:block;color:var(--on-dark-muted);font-size:15px}
+.t-controls{margin-top:56px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid #2E2E2C;padding-top:24px}
+.t-btns{display:flex;gap:10px}
+.t-btns button{width:52px;height:52px;border-radius:50%;background:none;border:1px solid #4A4A47;color:var(--on-dark);transition:background .2s,color .2s}
+.t-btns button:hover{background:var(--on-dark);color:var(--ink)}
+.t-count{font-family:var(--mono);font-size:14px;color:var(--on-dark-muted)}
+
+/* ============ FAQ ============ */
+.faq{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(40px,6vw,96px)}
+.faq-list{border-top:1px solid var(--ink)}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:26px 0;background:none;border:0;text-align:left;font-size:clamp(19px,1.8vw,24px);font-weight:500;letter-spacing:-.02em}
+.faq-q .pm{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);position:relative;transition:transform .4s var(--ease),background .3s}
+.faq-q .pm::before,.faq-q .pm::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:1.5px;background:currentColor;transform:translate(-50%,-50%)}
+.faq-q .pm::after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .4s var(--ease)}
+.faq-item.open .pm{background:var(--accent);border-color:var(--accent)}
+.faq-item.open .pm::after{transform:translate(-50%,-50%) rotate(0)}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}
+.faq-item.open .faq-a{grid-template-rows:1fr}
+.faq-a>div{overflow:hidden}
+.faq-a p{margin:0;padding:0 56px 26px 0;color:var(--muted)}
+
+/* ============ CONTACT ============ */
+.contact{background:var(--accent);color:var(--ink);padding:clamp(90px,12vw,160px) 0 0}
+.contact .label{color:var(--ink)}
+.contact h2{margin:16px 0 0;font-size:clamp(56px,11vw,180px);line-height:.88;letter-spacing:-.06em;font-weight:600}
+.contact-row{margin-top:clamp(40px,5vw,64px);display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.email-btn{display:inline-flex;align-items:center;gap:14px;min-height:64px;padding:0 28px;border-radius:999px;background:var(--ink);color:var(--bg);border:0;font-size:clamp(17px,1.8vw,22px);font-weight:500}
+.email-btn .hint{font-family:var(--mono);font-size:12px;color:var(--on-dark-muted)}
+.contact .btn.ghost{border-color:var(--ink)}
+.footer{margin-top:clamp(80px,10vw,140px);border-top:1px solid rgba(13,13,13,.25);padding:24px 0 32px;display:flex;flex-wrap:wrap;gap:16px 32px;justify-content:space-between;align-items:center;font-size:15px}
+.footer nav{display:flex;flex-wrap:wrap;gap:20px}
+.footer a{text-decoration:none}
+.footer a:hover{text-decoration:underline;text-underline-offset:4px}
+
+/* ============ CASE STUDY PAGE ============ */
+.case{position:fixed;inset:0;z-index:70;background:var(--bg);overflow-y:auto;overscroll-behavior:contain;transform:translateY(100%);transition:transform .7s var(--ease);visibility:hidden}
+.case.open{transform:none;visibility:visible}
+.case-bar{position:sticky;top:0;z-index:2;background:rgba(243,242,238,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.case-bar .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.case-back{display:inline-flex;align-items:center;gap:10px;background:none;border:1px solid var(--ink);border-radius:999px;min-height:44px;padding:0 18px;font-size:15px}
+.case-hero{padding:clamp(56px,8vw,110px) 0 40px}
+.case-hero h1{margin:18px 0 0;font-size:clamp(48px,8vw,128px);line-height:.92;letter-spacing:-.05em;font-weight:600}
+.case-hero .lede{margin:28px 0 0;font-size:clamp(20px,2vw,26px);line-height:1.4;letter-spacing:-.015em;max-width:820px;color:var(--muted)}
+.case-meta{margin-top:48px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;border-top:1px solid var(--ink);padding-top:20px}
+.case-meta dt{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.case-meta dd{margin:6px 0 0;font-weight:500}
+.case-cover{margin-top:24px;aspect-ratio:16/8;border-radius:24px}
+.case-cover.ph{padding:clamp(18px,3vw,40px)}
+.case-cover .ph-ui{font-size:clamp(12px,1.3vw,17px)}
+.case-sec{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(24px,5vw,80px);padding:clamp(56px,7vw,96px) 0;border-bottom:1px solid var(--line)}
+.case-sec h2{margin:10px 0 0;font-size:clamp(28px,3vw,40px);letter-spacing:-.035em;line-height:1.05;font-weight:600}
+.case-sec .body{font-size:clamp(18px,1.5vw,20px);line-height:1.6}
+.case-sec .body p{margin:0 0 1em}
+.approach{display:flex;flex-direction:column;border-top:1px solid var(--ink)}
+.approach li{display:grid;grid-template-columns:60px minmax(0,1fr);gap:16px;padding:22px 0;border-bottom:1px solid var(--line)}
+.approach li b{display:block;font-size:20px;letter-spacing:-.02em;margin-bottom:4px}
+.approach li span.mono{color:var(--muted);padding-top:4px}
+.approach li p{margin:0;color:var(--muted);font-size:17px}
+.ai-box{background:var(--ink);color:var(--on-dark);border-radius:20px;padding:clamp(24px,3vw,40px)}
+.ai-box p{margin:0 0 20px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:13px;padding:7px 12px;border-radius:999px;border:1px solid #444441;color:var(--on-dark)}
+.results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.result{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px}
+.result .v{font-size:clamp(36px,4vw,56px);font-weight:600;letter-spacing:-.05em;line-height:1}
+.result .l{margin-top:10px;color:var(--muted);font-size:15px}
+.learn{list-style:none;margin:0;padding:0}
+.learn li{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.learn li::before{content:"→";color:var(--accent);font-weight:600}
+.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:clamp(40px,5vw,64px) 0}
+.gallery .ph{aspect-ratio:4/3;border-radius:18px}
+.next{display:block;text-decoration:none;padding:clamp(56px,8vw,110px) 0;border-top:1px solid var(--ink);margin-top:40px}
+.next .t{font-size:clamp(44px,7vw,112px);font-weight:600;letter-spacing:-.05em;line-height:.95;margin-top:16px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.next .t .wr-arrow{width:72px;height:72px;font-size:28px}
+.next:hover .wr-arrow{transform:rotate(-45deg);background:var(--accent);border-color:var(--accent)}
+
+/* ============ REVEAL ============ */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:1080px){
+  .nav .link{display:none}
+  .process{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .work-row{grid-template-columns:56px minmax(0,1fr) 48px}
+  .wr-cat,.wr-year{display:none}
+}
+@media (max-width:760px){
+  .nav .btn{display:none}
+  .menu-btn{display:inline-flex;align-items:center}
+  .why,.faq,.case-sec{grid-template-columns:minmax(0,1fr)}
+  .case-meta{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .case-cover{aspect-ratio:4/3}
+  .results,.gallery{grid-template-columns:minmax(0,1fr)}
+  .work-row{grid-template-columns:minmax(0,1fr) 44px;gap:14px;padding:24px 0}
+  .work-row>.mono{display:none}
+  .work-row:hover{padding-left:0;padding-right:0}
+  .work-row::before{display:none}
+  .work-row:hover{color:inherit}
+  .work-row:hover .wr-sum{color:var(--muted)}
+  .work-row .wr-thumb{display:flex;grid-column:1/-1;aspect-ratio:16/10;border-radius:14px;order:-1}
+  .wr-arrow{width:44px;height:44px}
+  .preview{display:none}
+  .step{min-height:0}
+  .t-slide{padding-right:0}
+}
+@media (max-width:520px){
+  .process{grid-template-columns:minmax(0,1fr)}
+  .hero-ctas .btn{flex:1 1 100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<a href="#work" class="sr-only">Skip to work</a>
+
+<!-- ============ HEADER ============ -->
+<header class="header" id="header">
+  <div class="wrap">
+    <a href="#top" class="avail" aria-label="Back to top" style="text-decoration:none"><span class="dot"></span><span data-availability></span></a>
+    <nav class="nav" aria-label="Main">
+      <a class="link" href="#work">Case studies</a>
+      <a class="link" href="#process">Process</a>
+      <a class="link" href="#about">About</a>
+      <a class="link" href="#faq">FAQ</a>
+      <a class="btn" href="#contact">Book an intro call</a>
+      <button class="menu-btn" id="menuOpen" aria-expanded="false" aria-controls="mobileMenu">Menu</button>
+    </nav>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <div class="top">
+    <span class="avail" style="background:transparent;border-color:#444"><span class="dot"></span><span data-availability></span></span>
+    <button class="close" id="menuClose">Close</button>
+  </div>
+  <nav aria-label="Mobile">
+    <a href="#work">Case studies</a>
+    <a href="#process">Process</a>
+    <a href="#about">About</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="foot">
+    <a class="btn accent" href="#contact" style="justify-content:center">Book an intro call <span class="arr">→</span></a>
+  </div>
+</div>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <h1 class="reveal">Turning ideas into <span class="serif">working</span><br><span class="rotator" id="rotator"><span>AI products.</span></span></h1>
+    <div class="hero-bottom">
+      <p class="reveal">I'm <strong data-name></strong>. For 8+ years I've taken products from a blank page to launch — strategy, design and shipping — and today I build with AI at every step, from research to the features users touch.</p>
+      <div class="hero-ctas reveal">
+        <a class="btn" href="#work">See case studies <span class="arr">↓</span></a>
+        <a class="btn ghost" href="#contact">Get in touch</a>
+      </div>
+    </div>
+    <div class="hero-meta mono reveal">
+      <span>Based in <span data-location></span> · working worldwide</span>
+      <span>Local time <span id="clock">--:--</span></span>
+      <span>Scroll to explore ↓</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
+
+<!-- ============ WORK ============ -->
+<section class="block" id="work">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="reveal">
+        <p class="label">[01] Latest work</p>
+        <h2>What happens when AI does <span class="serif">real</span> work?</h2>
+      </div>
+      <p class="reveal">Three recent products. Each case study walks through the problem, what I built, where AI fit in, and what changed.</p>
+    </div>
+    <div class="work-list" id="workList"></div>
+    <div class="work-foot mono reveal"><span>Hover to preview · click to open</span></div>
+  </div>
+</section>
+<div class="preview" id="preview" aria-hidden="true"></div>
+
+<!-- ============ PROCESS ============ -->
+<section class="block" id="process" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="reveal">
+        <p class="label">[02] Process</p>
+        <h2>From fuzzy idea to <span class="serif">shipped</span> product.</h2>
+      </div>
+      <p class="reveal">A tight loop where AI speeds up every stage — research, prototyping, building and measuring.</p>
+    </div>
+    <div class="process" id="processGrid"></div>
+  </div>
+</section>
+
+<!-- ============ ABOUT / WHY ============ -->
+<section class="block" id="about" style="border-top:1px solid var(--line)">
+  <div class="wrap">
+    <div class="why">
+      <div class="reveal">
+        <p class="label">[03] About</p>
+        <h2 style="margin:12px 0 0;font-size:clamp(36px,4.6vw,64px);line-height:1;letter-spacing:-.045em;font-weight:600">Part product lead, part designer, <span class="serif">part builder.</span></h2>
+        <p style="margin:28px 0 0;color:var(--muted);font-size:19px;max-width:520px">[Two or three sentences in your own voice: where you started, the kinds of products you've built, the domains you know best, and why you now build with AI.]</p>
+        <div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn ghost" data-link="resume" href="#">Download résumé <span class="arr">↗</span></a>
+        </div>
+      </div>
+      <ul class="why-list reveal" id="whyList"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="block testi" aria-roledescription="carousel" aria-label="Testimonials">
+  <div class="wrap">
+    <p class="label" style="margin-bottom:40px">[04] Kind words</p>
+    <div class="t-viewport" id="tViewport"><div class="t-track" id="tTrack"></div></div>
+    <div class="t-controls">
+      <span class="t-count" id="tCount" aria-live="polite">1 / 3</span>
+      <span class="mono" style="color:var(--on-dark-muted)">Swipe or use arrows</span>
+      <div class="t-btns">
+        <button id="tPrev" aria-label="Previous testimonial">←</button>
+        <button id="tNext" aria-label="Next testimonial">→</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="block" id="faq">
+  <div class="wrap faq">
+    <div class="reveal">
+      <p class="label">[05] FAQ</p>
+      <h2 style="margin:12px 0 0;font-size:clamp(36px,4.6vw,64px);line-height:1;letter-spacing:-.045em;font-weight:600">Questions, <span class="serif">answered.</span></h2>
+      <p style="margin:24px 0 0;color:var(--muted)">Something else on your mind? <a href="#contact">Just ask.</a></p>
+    </div>
+    <div class="faq-list reveal" id="faqList"></div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <p class="label">[06] Contact</p>
+    <h2>Let's build<br><span class="serif">something</span> real.</h2>
+    <div class="contact-row">
+      <button class="email-btn" id="emailBtn"><span data-email></span><span class="hint" id="emailHint">Click to copy</span></button>
+      <a class="btn ghost" data-link="calendar" href="#">Book a 25-min call <span class="arr">↗</span></a>
+    </div>
+    <footer class="footer">
+      <span>© <span id="year"></span> <span data-name></span></span>
+      <nav aria-label="Social">
+        <a data-link="instagram" href="#">Instagram</a>
+      </nav>
+      <a href="#top">Back to top ↑</a>
+    </footer>
+  </div>
+</section>
+</main>
+
+<!-- ============ CASE STUDY PAGE ============ -->
+<div class="case" id="case" role="dialog" aria-modal="true" aria-label="Case study" aria-hidden="true">
+  <div class="case-bar">
+    <div class="wrap">
+      <button class="case-back" id="caseBack">← All work</button>
+      <span class="mono" id="caseCrumb"></span>
+    </div>
+  </div>
+  <div class="wrap" id="caseBody"></div>
+</div>
+
+<script>
+/* =====================================================================
+   EDIT YOUR CONTENT HERE — everything on the page is built from this.
+   ===================================================================== */
+const SITE = {
+  name: "Purushotham",
+  initials: "P",
+  email: "you@example.com",
+  availability: "Open to new work · Dec ’26",
+  location: "Bengaluru",
+  timezone: "Asia/Kolkata",      // IANA zone for the live clock
+  tzLabel: "IST",
+  links: { instagram:"#", resume:"#", calendar:"#" },
+  rotatingWords: ["AI products.", "shipped features.", "real outcomes.", "happy users."],
+  marquee: ["Ship faster", "Automate the boring", "Delight users", "Cut costs", "Raise funding", "Launch with confidence"]
+};
+
+/* Sample projects — realistic examples to replace with your own work.
+   `kind` picks the mock visual: "chat" | "mobile" | "dashboard".
+   Set `cover` / `gallery` to image paths to use real screenshots instead. */
+const PROJECTS = [
+  {
+    slug: "ledgerly-copilot",
+    title: "Ledgerly Copilot",
+    summary: "An AI assistant that closes the books for small-business accountants.",
+    category: "Fintech · B2B SaaS",
+    year: "2026",
+    color: "#DCE3F5",
+    kind: "chat",
+    cover: "", gallery: ["", ""],
+    role: "Product lead & builder",
+    timeline: "5 months",
+    team: "3 eng · 1 design",
+    platform: "Web app",
+    overview: "Ledgerly is accounting software used by 4,000+ small accounting firms. Month-end close was the most hated part of the job: hours of matching bank lines to invoices and chasing missing receipts.",
+    problem: "Accountants spent around 9 hours per client each month reconciling transactions by hand. Firms couldn't take on new clients without hiring, and churn spiked every quarter-end.",
+    approach: [
+      { t: "Discover", d: "Shadowed 14 accountants during close week and found that 70% of the time went to the same five reconciliation patterns." },
+      { t: "Prototype", d: "Built a clickable copilot in 10 days on real anonymised ledgers; tested it with 6 firms before writing production code." },
+      { t: "Build", d: "Shipped a side-panel copilot that suggests matches, explains each one and asks before posting anything to the ledger." },
+      { t: "Launch & measure", d: "Rolled out to 200 firms behind a flag, tracking acceptance rate, time-to-close and correction rate per suggestion." }
+    ],
+    ai: "An LLM reads bank lines, invoices and past entries, retrieves similar historical matches, and proposes a reconciliation with a confidence score and a plain-English reason. Low-confidence items go to a human queue. A 1,200-case eval set guards every model or prompt change.",
+    stack: ["LLM", "RAG", "Confidence scoring", "Human-in-the-loop", "Evals"],
+    results: [
+      { v: "−62%", l: "Time to close per client" },
+      { v: "91%", l: "Suggestions accepted unedited" },
+      { v: "+18%", l: "Clients handled per accountant" }
+    ],
+    learnings: [
+      "Showing why the AI made a match mattered more than accuracy for earning trust",
+      "A small, sharp eval set beat a large, noisy one for catching regressions",
+      "Next time I'd involve the firm's reviewer role from week one, not week six"
+    ]
+  },
+  {
+    slug: "carenote",
+    title: "CareNote",
+    summary: "An ambient AI scribe that writes clinic notes while the doctor talks to the patient.",
+    category: "Healthtech · Mobile",
+    year: "2025",
+    color: "#E7DFD0",
+    kind: "mobile",
+    cover: "", gallery: ["", ""],
+    role: "Founding product manager",
+    timeline: "7 months",
+    team: "4 eng · 1 design · 1 clinician",
+    platform: "iOS & Android",
+    overview: "CareNote started as a pilot with a network of 30 outpatient clinics in South India where doctors saw 60+ patients a day and wrote notes late into the night.",
+    problem: "Doctors spent nearly 2 hours a day on documentation. Notes were short and inconsistent, which hurt follow-ups, referrals and insurance claims.",
+    approach: [
+      { t: "Discover", d: "Sat in on 80 consultations across three languages to map how a visit actually flows and what a good note needs." },
+      { t: "Prototype", d: "Tested a 'record, then review' flow on a phone in two clinics within three weeks." },
+      { t: "Build", d: "Shipped a one-tap app that records, transcribes mixed-language speech and drafts a structured note for the doctor to sign." },
+      { t: "Launch & measure", d: "Expanded clinic by clinic, measuring documentation time, edit distance on notes and doctor retention." }
+    ],
+    ai: "Speech recognition tuned for code-mixed English, Hindi and Kannada feeds an LLM that drafts a SOAP-format note. Medication names are checked against a drug database, and nothing is saved until the doctor reviews and signs.",
+    stack: ["Speech-to-text", "LLM", "Structured output", "Guardrails", "On-device privacy"],
+    results: [
+      { v: "−74%", l: "Documentation time per visit" },
+      { v: "4.8★", l: "Average app store rating" },
+      { v: "1,100+", l: "Doctors using it weekly" }
+    ],
+    learnings: [
+      "Multilingual speech was the real product problem, not the note writing",
+      "Doctors trusted drafts more once edits were one tap away",
+      "Clinical review in the loop made launch slower but adoption much faster"
+    ]
+  },
+  {
+    slug: "dispatch-ai",
+    title: "Dispatch AI",
+    summary: "An agent that triages and resolves support tickets for D2C e-commerce brands.",
+    category: "SaaS · Customer support",
+    year: "2025",
+    color: "#D6E7DC",
+    kind: "dashboard",
+    cover: "", gallery: ["", ""],
+    role: "Product builder (0 → 1)",
+    timeline: "10 weeks",
+    team: "Solo + 1 engineer",
+    platform: "Web · Shopify & Zendesk",
+    overview: "A mid-size D2C apparel brand was handling 25,000 support tickets a month with a team of 18, and response times doubled during every sale.",
+    problem: "Over half the tickets were repetitive — order status, returns, size exchanges — but agents still read and routed each one by hand, with a 14-hour average first response.",
+    approach: [
+      { t: "Discover", d: "Tagged 3,000 historical tickets to find the ten intents that made up most of the volume." },
+      { t: "Prototype", d: "Ran the agent in 'shadow mode' for two weeks, drafting replies that humans compared against their own." },
+      { t: "Build", d: "Shipped an agent that reads the ticket, checks the order in Shopify, and either resolves it or routes it with a summary." },
+      { t: "Launch & measure", d: "Turned on auto-resolve one intent at a time, gated by quality scores from weekly human review." }
+    ],
+    ai: "A tool-using agent classifies intent, calls Shopify and courier APIs, applies the brand's return policy and drafts on-brand replies. Refunds above a limit and angry customers always go to a human. A live dashboard tracks resolution quality and cost per ticket.",
+    stack: ["Agents", "Tool use", "Intent classification", "Policy guardrails", "Cost tracking"],
+    results: [
+      { v: "58%", l: "Tickets resolved without a human" },
+      { v: "14h → 3m", l: "First response time" },
+      { v: "−41%", l: "Support cost per order" }
+    ],
+    learnings: [
+      "Shadow mode was the cheapest way to earn the support team's trust",
+      "Releasing one intent at a time made quality easy to reason about",
+      "Clear escalation rules mattered more than a smarter model"
+    ]
+  }
+];
+
+const PROCESS = [
+  { t: "Frame the problem", d: "Talk to users, map the job to be done, and decide where AI genuinely helps — and where it doesn't.", time: "Week 1" },
+  { t: "Prototype fast", d: "Working prototypes in days, not slide decks in weeks, so we test real behaviour early.", time: "Week 1–2" },
+  { t: "Build & ship", d: "Production-ready features with evals and guardrails baked in from day one.", time: "Week 3+" },
+  { t: "Measure & scale", d: "Instrument everything, treat model quality as a product metric, double down on what works.", time: "Ongoing" }
+];
+
+const WHY = [
+  "One person across strategy, design and build — fewer handoffs, faster decisions",
+  "8+ years of shipping, so AI is a tool in the kit, not the whole pitch",
+  "Prototypes users can click within days",
+  "Evals, guardrails and costs planned up front, not after launch",
+  "Clear writing and weekly demos — you always know where things stand"
+];
+
+const TESTIMONIALS = [
+  { q: "[A short quote about what it's like to build with you — the more specific, the better.]", hl: "", name: "[Name]", role: "[Founder, Company]" },
+  { q: "[Second quote — ideally about speed, judgement or outcomes.]", hl: "", name: "[Name]", role: "[CTO, Company]" },
+  { q: "[Third quote — ideally about collaboration or communication.]", hl: "", name: "[Name]", role: "[Head of Product, Company]" }
+];
+
+const FAQ = [
+  { q: "What kind of work do you take on?", a: "[Full-time roles, fractional product leadership, or fixed-scope builds — say which you're open to.]" },
+  { q: "What makes an 'AI-enabled' product builder different?", a: "I treat AI two ways: as a feature inside the product where it truly helps users, and as a tool that lets me research, prototype and ship much faster than a traditional team." },
+  { q: "How fast can we get to a first version?", a: "[Typical answer: a clickable prototype in 1–2 weeks, a first production release in 4–8 weeks, depending on scope.]" },
+  { q: "Do you write code?", a: "[Be honest about your level — e.g. 'I build working prototypes and production features end to end, and pair with engineers on anything heavier.']" },
+  { q: "How do we start?", a: "Book a 25-minute intro call or send a short note about the problem. I'll reply within two working days." }
+];
+
+/* =====================================================================
+   NO NEED TO EDIT BELOW THIS LINE
+   ===================================================================== */
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const pad = n => String(n).padStart(2, "0");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* mock product visual (or real image when provided) */
+function visual(p, label, src) {
+  const img = src ? `<img src="${src}" alt="${p.title} — ${label}">` : "";
+  let ui;
+  if (p.kind === "chat") ui = `<div class="ph-ui">
+      <div class="bubble me">Reconcile March for Sharma Traders</div>
+      <div class="bubble ai"><b>42 of 47 matched.</b> 5 need review — 2 missing receipts, 3 split payments.</div>
+      <div class="row"><div class="chipline">✓ HDFC ****2231 → INV-0193</div><div class="chipline">✓ UPI 88213 → INV-0201</div></div>
+      <div class="bar" style="width:55%"></div></div>`;
+  else if (p.kind === "mobile") ui = `<div class="ph-ui phone"><div class="screen">
+      <div class="rec"><span></span>Recording · 04:12</div>
+      <div class="bar" style="width:80%"></div><div class="bar" style="width:62%"></div>
+      <div class="note"><b>Assessment</b><div class="bar" style="width:90%"></div><div class="bar" style="width:70%"></div></div>
+      <div class="sign">Review &amp; sign</div></div></div>`;
+  else ui = `<div class="ph-ui">
+      <div class="kpis"><div><b>58%</b>auto-resolved</div><div><b>3m</b>first reply</div><div><b>₹11</b>per ticket</div></div>
+      <div class="bars">${[40, 62, 55, 74, 68, 85, 79, 92].map(h => `<i style="height:${h}%"></i>`).join("")}</div>
+      <div class="bar" style="width:65%"></div></div>`;
+  return `<div class="tag"><span>${p.title}</span><span>${label}</span></div>${ui}${img}`;
+}
+
+/* ---------- static bits ---------- */
+$$("[data-name]").forEach(e => e.textContent = SITE.name);
+$$("[data-initials]").forEach(e => e.textContent = SITE.initials);
+$$("[data-availability]").forEach(e => e.textContent = SITE.availability);
+$$("[data-location]").forEach(e => e.textContent = SITE.location);
+$$("[data-email]").forEach(e => e.textContent = SITE.email);
+$$("[data-link]").forEach(a => { a.href = SITE.links[a.dataset.link] || "#"; if (a.href.startsWith("http")) { a.target = "_blank"; a.rel = "noopener"; } });
+$("#year").textContent = new Date().getFullYear();
+
+/* ---------- clock ---------- */
+const clockFmt = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: SITE.timezone });
+const tick = () => $("#clock").textContent = `${clockFmt.format(new Date())} ${SITE.tzLabel}`;
+tick(); setInterval(tick, 15000);
+
+/* ---------- rotating hero word ---------- */
+(() => {
+  const span = $("#rotator span"); let i = 0;
+  span.textContent = SITE.rotatingWords[0];
+  if (reduced || SITE.rotatingWords.length < 2) return;
+  setInterval(() => {
+    span.classList.add("out");
+    setTimeout(() => {
+      i = (i + 1) % SITE.rotatingWords.length;
+      span.textContent = SITE.rotatingWords[i];
+      span.classList.remove("out"); span.classList.add("pre");
+      requestAnimationFrame(() => requestAnimationFrame(() => span.classList.remove("pre")));
+    }, 450);
+  }, 2600);
+})();
+
+/* ---------- marquee ---------- */
+(() => {
+  const words = SITE.marquee.map((w, i) => i % 2 ? `<i>${w}</i>` : w);
+  const set = words.map(w => `<span class="marquee-item">${w}<span class="star"></span></span>`).join("");
+  $("#marquee").innerHTML = set + set;
+})();
+
+/* ---------- work index ---------- */
+$("#workList").innerHTML = PROJECTS.map((p, i) => `
+  <a class="work-row reveal" href="#/work/${p.slug}" data-i="${i}">
+    <div class="wr-thumb ph" style="--c:${p.color}">${visual(p, "Cover", p.cover)}</div>
+    <span class="mono">[${pad(i + 1)}]</span>
+    <span class="wr-title">${p.title}<span class="wr-sum">${p.summary}</span></span>
+    <span class="wr-cat">${p.category}</span>
+    <span class="wr-year mono">${p.year}</span>
+    <span class="wr-arrow" aria-hidden="true">→</span>
+  </a>`).join("");
+
+/* cursor-follow preview */
+(() => {
+  const pv = $("#preview");
+  if (!matchMedia("(hover:hover) and (min-width:761px)").matches) return;
+  let x = 0, y = 0, cx = 0, cy = 0, raf;
+  const loop = () => { cx += (x - cx) * .14; cy += (y - cy) * .14; pv.style.left = cx + "px"; pv.style.top = cy + "px"; raf = requestAnimationFrame(loop); };
+  $$(".work-row").forEach(row => {
+    row.addEventListener("mouseenter", e => {
+      const p = PROJECTS[row.dataset.i];
+      pv.innerHTML = `<div class="ph" style="--c:${p.color}">${visual(p, p.year, p.cover)}</div>`;
+      x = cx = e.clientX + 200; y = cy = e.clientY;
+      pv.classList.add("on"); cancelAnimationFrame(raf); loop();
+    });
+    row.addEventListener("mousemove", e => { x = e.clientX + 200; y = e.clientY; });
+    row.addEventListener("mouseleave", () => { pv.classList.remove("on"); setTimeout(() => cancelAnimationFrame(raf), 400); });
+  });
+})();
+
+/* ---------- process / why / stats ---------- */
+$("#processGrid").innerHTML = PROCESS.map((s, i) => `
+  <div class="step reveal"><div class="n"><span>[${pad(i + 1)}]</span><span>${s.time}</span></div>
+  <h3>${s.t}</h3><p>${s.d}</p></div>`).join("");
+$("#whyList").innerHTML = WHY.map(w => `<li><span>→</span><span>${w}</span></li>`).join("");
+
+/* count-up for numeric stats like "8+" */
+function countUp(el) {
+  const m = el.dataset.count.match(/^(\d+)(.*)$/);
+  if (!m || reduced) return;
+  const end = +m[1], suf = m[2], t0 = performance.now(), dur = 1200;
+  const step = t => { const k = Math.min(1, (t - t0) / dur); el.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))) + suf; if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+
+/* ---------- testimonials carousel ---------- */
+(() => {
+  const track = $("#tTrack"), vp = $("#tViewport"), n = TESTIMONIALS.length; let i = 0;
+  track.innerHTML = TESTIMONIALS.map((t, k) => {
+    const q = t.hl ? t.q.replace(t.hl, `<span class="serif">${t.hl}</span>`) : t.q;
+    const ini = t.name.replace(/[\[\]]/g, "").split(" ").map(w => w[0] || "").join("").slice(0, 2).toUpperCase();
+    return `<div class="t-slide" role="group" aria-roledescription="slide" aria-label="${k + 1} of ${n}">
+      <blockquote>“${q}”</blockquote>
+      <div class="t-who"><span class="t-avatar">${ini}</span><span>${t.name}<small>${t.role}</small></span></div></div>`;
+  }).join("");
+  const go = k => { i = (k + n) % n; track.style.transform = `translateX(${-i * 100}%)`; $("#tCount").textContent = `${i + 1} / ${n}`; };
+  $("#tPrev").onclick = () => go(i - 1);
+  $("#tNext").onclick = () => go(i + 1);
+  let sx = null, dx = 0;
+  vp.addEventListener("pointerdown", e => { sx = e.clientX; dx = 0; vp.classList.add("drag"); track.style.transition = "none"; });
+  addEventListener("pointermove", e => { if (sx === null) return; dx = e.clientX - sx; track.style.transform = `translateX(calc(${-i * 100}% + ${dx}px))`; });
+  addEventListener("pointerup", () => {
+    if (sx === null) return; sx = null; vp.classList.remove("drag"); track.style.transition = "";
+    if (Math.abs(dx) > 60) go(i + (dx < 0 ? 1 : -1)); else go(i);
+  });
+  let auto = setInterval(() => go(i + 1), 7000);
+  vp.addEventListener("pointerenter", () => clearInterval(auto));
+  if (reduced) clearInterval(auto);
+})();
+
+/* ---------- FAQ accordion ---------- */
+$("#faqList").innerHTML = FAQ.map((f, i) => `
+  <div class="faq-item${i === 0 ? " open" : ""}">
+    <button class="faq-q" aria-expanded="${i === 0}" aria-controls="faq-${i}" id="faqq-${i}">${f.q}<span class="pm" aria-hidden="true"></span></button>
+    <div class="faq-a" id="faq-${i}" role="region" aria-labelledby="faqq-${i}"><div><p>${f.a}</p></div></div>
+  </div>`).join("");
+$$(".faq-q").forEach(b => b.addEventListener("click", () => {
+  const item = b.parentElement, open = item.classList.contains("open");
+  $$(".faq-item").forEach(x => { x.classList.remove("open"); $(".faq-q", x).setAttribute("aria-expanded", "false"); });
+  if (!open) { item.classList.add("open"); b.setAttribute("aria-expanded", "true"); }
+}));
+
+/* ---------- copy email ---------- */
+$("#emailBtn").addEventListener("click", async () => {
+  const hint = $("#emailHint");
+  try { await navigator.clipboard.writeText(SITE.email); hint.textContent = "Copied!"; }
+  catch { location.href = `mailto:${SITE.email}`; return; }
+  setTimeout(() => hint.textContent = "Click to copy", 1800);
+});
+
+/* ---------- header hide on scroll ---------- */
+(() => {
+  const h = $("#header"); let last = 0;
+  addEventListener("scroll", () => {
+    const y = scrollY;
+    h.classList.toggle("scrolled", y > 10);
+    h.classList.toggle("hide", y > last && y > 300);
+    last = y;
+  }, { passive: true });
+})();
+
+/* ---------- mobile menu ---------- */
+(() => {
+  const m = $("#mobileMenu"), open = $("#menuOpen");
+  const set = v => { m.classList.toggle("open", v); m.setAttribute("aria-hidden", !v); open.setAttribute("aria-expanded", v); document.body.classList.toggle("locked", v); };
+  open.onclick = () => set(true);
+  $("#menuClose").onclick = () => set(false);
+  $$("a", m).forEach(a => a.addEventListener("click", () => set(false)));
+})();
+
+/* ---------- reveal on scroll ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  e.target.classList.add("in");
+  const c = e.target.querySelector?.("[data-count]"); if (c) countUp(c);
+  io.unobserve(e.target);
+}), { threshold: .12, rootMargin: "0px 0px -40px 0px" });
+const observe = (root = document) => $$(".reveal:not(.in)", root).forEach(el => io.observe(el));
+observe();
+
+/* ---------- case study page (hash routing: #/work/slug) ---------- */
+const caseEl = $("#case"), caseBody = $("#caseBody");
+let lastScroll = 0;
+function renderCase(p, i) {
+  const next = PROJECTS[(i + 1) % PROJECTS.length];
+  return `
+  <header class="case-hero">
+    <p class="label reveal">[${pad(i + 1)}] ${p.category} · ${p.year}</p>
+    <h1 class="reveal">${p.title}</h1>
+    <p class="lede reveal">${p.summary}</p>
+    <dl class="case-meta reveal">
+      <div><dt>Role</dt><dd>${p.role}</dd></div>
+      <div><dt>Timeline</dt><dd>${p.timeline}</dd></div>
+      <div><dt>Team</dt><dd>${p.team}</dd></div>
+      <div><dt>Platform</dt><dd>${p.platform}</dd></div>
+    </dl>
+  </header>
+  <div class="case-cover ph reveal" style="--c:${p.color}">${visual(p, "Cover", p.cover)}</div>
+
+  <section class="case-sec"><div class="reveal"><p class="label">Overview</p><h2>The context</h2></div>
+    <div class="body reveal"><p>${p.overview}</p></div></section>
+
+  <section class="case-sec"><div class="reveal"><p class="label">Problem</p><h2>What needed fixing</h2></div>
+    <div class="body reveal"><p>${p.problem}</p></div></section>
+
+  <section class="case-sec"><div class="reveal"><p class="label">Approach</p><h2>How I got there</h2></div>
+    <ol class="approach reveal" style="list-style:none;margin:0;padding:0">${p.approach.map((a, k) => `
+      <li><span class="mono">[${pad(k + 1)}]</span><div><b>${a.t}</b><p>${a.d}</p></div></li>`).join("")}</ol></section>
+
+  <div class="gallery">${p.gallery.map((g, k) => `<div class="ph reveal" style="--c:${p.color}">${visual(p, "Screen " + (k + 1), g)}</div>`).join("")}</div>
+
+  <section class="case-sec" style="border-top:1px solid var(--line)"><div class="reveal"><p class="label">AI layer</p><h2>Where AI does the work</h2></div>
+    <div class="ai-box reveal"><p>${p.ai}</p><div class="chips">${p.stack.map(s => `<span class="chip">${s}</span>`).join("")}</div></div></section>
+
+  <section class="case-sec"><div class="reveal"><p class="label">Results</p><h2>What changed</h2></div>
+    <div class="results">${p.results.map(r => `<div class="result reveal"><div class="v">${r.v}</div><div class="l">${r.l}</div></div>`).join("")}</div></section>
+
+  <section class="case-sec" style="border-bottom:0"><div class="reveal"><p class="label">Learnings</p><h2>What I'd keep</h2></div>
+    <ul class="learn body reveal">${p.learnings.map(l => `<li>${l}</li>`).join("")}</ul></section>
+
+  <a class="next" href="#/work/${next.slug}">
+    <span class="label">Next case study</span>
+    <span class="t">${next.title}<span class="wr-arrow" aria-hidden="true">→</span></span>
+  </a>`;
+}
+function route() {
+  const m = location.hash.match(/^#\/work\/(.+)$/);
+  if (m) {
+    const i = PROJECTS.findIndex(p => p.slug === m[1]);
+    if (i < 0) return;
+    if (!caseEl.classList.contains("open")) lastScroll = scrollY;
+    caseBody.innerHTML = renderCase(PROJECTS[i], i);
+    $("#caseCrumb").textContent = `${pad(i + 1)} / ${pad(PROJECTS.length)}`;
+    caseEl.classList.add("open"); caseEl.setAttribute("aria-hidden", "false");
+    document.body.classList.add("locked");
+    caseEl.scrollTop = 0;
+    $$(".reveal", caseBody).forEach(el => caseIO.observe(el));
+    setTimeout(() => $("#caseBack").focus({ preventScroll: true }), 300);
+    document.title = `${PROJECTS[i].title} — ${SITE.name}`;
+  } else if (caseEl.classList.contains("open")) {
+    caseEl.classList.remove("open"); caseEl.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("locked");
+    document.title = `${SITE.name} — AI-Enabled Product Builder`;
+  }
+}
+const caseIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); caseIO.unobserve(e.target); } }), { root: caseEl, threshold: .1 });
+$("#caseBack").onclick = () => {
+  history.pushState("", "", location.pathname + "#work");
+  route();
+  scrollTo({ top: $("#work").offsetTop - 40, behavior: "instant" });
+};
+addEventListener("keydown", e => { if (e.key === "Escape" && caseEl.classList.contains("open")) $("#caseBack").click(); });
+addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>
