@@ -144,12 +144,35 @@ section.block{padding:clamp(80px,11vw,150px) 0}
 .ph .bars i{flex:1;border-radius:4px 4px 0 0;background:var(--ink);opacity:.82}
 
 /* ============ PROCESS ============ */
-.process{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
-.step{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;display:flex;flex-direction:column;min-height:300px;transition:transform .45s var(--ease),border-color .3s}
-.step:hover{transform:translateY(-6px);border-color:var(--ink)}
-.step .n{font-family:var(--mono);font-size:13px;display:flex;justify-content:space-between;color:var(--muted)}
-.step h3{margin:auto 0 0;font-size:26px;font-weight:600;letter-spacing:-.03em;line-height:1.1;padding-top:48px}
-.step p{margin:10px 0 0;color:var(--muted);font-size:15px}
+.pc-summary{display:flex;flex-wrap:wrap;align-items:flex-end;gap:20px 40px;padding:32px 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--line)}
+.pc-summary b{display:block;font-size:clamp(44px,5.6vw,80px);font-weight:600;letter-spacing:-.05em;line-height:1;margin-top:10px}
+.pc-summary .was b{color:var(--muted);text-decoration:line-through;text-decoration-thickness:3px}
+.pc-arrow{font-size:clamp(32px,3vw,44px);color:var(--muted);padding-bottom:8px}
+.pc-gain{margin-left:auto;background:var(--accent);border-radius:20px;padding:20px 26px}
+.pc-gain b{margin:0}
+.pc-gain span{display:block;margin-top:6px;font-size:15px;font-weight:500}
+.pc-legend{display:flex;flex-wrap:wrap;gap:24px;color:var(--muted);margin:28px 0 4px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:8px;vertical-align:-1px}
+.sw.old{background:#C9C7BF}.sw.ai{background:var(--accent)}
+.pc-row{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,9fr);gap:20px 40px;padding:32px 0;border-bottom:1px solid var(--line)}
+.pc-stage .mono{color:var(--muted)}
+.pc-stage h3{margin:8px 0 0;font-size:clamp(24px,2.4vw,32px);font-weight:600;letter-spacing:-.03em;line-height:1.1}
+.pc-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 40px}
+.pc-k{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:10px}
+.pc-col.ai .pc-k{color:var(--ink)}
+.pc-bar{display:flex;align-items:center;gap:14px}
+.pc-bar .track{flex:1;height:10px;border-radius:999px;background:rgba(13,13,13,.06);overflow:hidden}
+.pc-bar .fill{display:block;height:100%;width:var(--w);border-radius:inherit;background:#C9C7BF;transform:scaleX(0);transform-origin:left;transition:transform 1.3s var(--ease) .2s}
+.pc-col.ai .fill{background:var(--accent);transition-delay:.5s}
+.pc-row.in .fill{transform:scaleX(1)}
+.pc-bar .t{font-family:var(--mono);font-size:13px;white-space:nowrap;min-width:86px;text-align:right}
+.pc-col.ai .t{font-weight:600}
+.pc-col p{margin:12px 0 0;font-size:15px;color:var(--muted)}
+.pc-col.ai p{color:var(--ink)}
+.pc-tools{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
+.pc-tools span{font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.pc-col.ai .pc-tools span{border-color:var(--ink);color:var(--ink)}
+.pc-note{margin-top:20px;color:var(--muted)}
 
 /* ============ ABOUT / WHY ============ */
 .why{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(40px,6vw,96px)}
@@ -252,14 +275,15 @@ section.block{padding:clamp(80px,11vw,150px) 0}
 /* ============ RESPONSIVE ============ */
 @media (max-width:1080px){
   .nav .link{display:none}
-  .process{grid-template-columns:repeat(2,minmax(0,1fr))}
   .work-row{grid-template-columns:56px minmax(0,1fr) 48px}
   .wr-cat,.wr-year{display:none}
 }
 @media (max-width:760px){
   .nav .btn{display:none}
   .menu-btn{display:inline-flex;align-items:center}
-  .why,.faq,.case-sec{grid-template-columns:minmax(0,1fr)}
+  .why,.faq,.case-sec,.pc-row,.pc-cols{grid-template-columns:minmax(0,1fr)}
+  .pc-gain{margin-left:0}
+  .pc-arrow{display:none}
   .case-meta{grid-template-columns:repeat(2,minmax(0,1fr))}
   .case-cover{aspect-ratio:4/3}
   .results,.gallery{grid-template-columns:minmax(0,1fr)}
@@ -272,11 +296,9 @@ section.block{padding:clamp(80px,11vw,150px) 0}
   .work-row .wr-thumb{display:flex;grid-column:1/-1;aspect-ratio:16/10;border-radius:14px;order:-1}
   .wr-arrow{width:44px;height:44px}
   .preview{display:none}
-  .step{min-height:0}
   .t-slide{padding-right:0}
 }
 @media (max-width:520px){
-  .process{grid-template-columns:minmax(0,1fr)}
   .hero-ctas .btn{flex:1 1 100%;justify-content:center}
 }
 @media (prefers-reduced-motion:reduce){
@@ -368,11 +390,19 @@ section.block{padding:clamp(80px,11vw,150px) 0}
     <div class="sec-head">
       <div class="reveal">
         <p class="label">[02] Process</p>
-        <h2>From fuzzy idea to <span class="serif">shipped</span> product.</h2>
+        <h2>The traditional design process is an <span class="serif">old story.</span></h2>
       </div>
-      <p class="reveal">A tight loop where AI speeds up every stage — research, prototyping, building and measuring.</p>
+      <p class="reveal">The old playbook moved in hand-offs: research, then documents, then wireframes, then build — each waiting on the last. AI changes the game altogether. Here's how a first release compares, stage by stage.</p>
     </div>
-    <div class="process" id="processGrid"></div>
+    <div class="pc-summary reveal">
+      <div class="was"><span class="label">Traditional</span><b id="pcOld"></b></div>
+      <div class="pc-arrow" aria-hidden="true">→</div>
+      <div><span class="label">AI-enabled</span><b id="pcAi"></b></div>
+      <div class="pc-gain"><b id="pcGain"></b><span>faster to first release</span></div>
+    </div>
+    <div class="pc-legend mono" aria-hidden="true"><span><i class="sw old"></i>Traditional process</span><span><i class="sw ai"></i>My AI-enabled process</span></div>
+    <div id="processGrid"></div>
+    <p class="pc-note mono">Typical timelines for a first release. Every project is different.</p>
   </div>
 </section>
 
@@ -577,11 +607,27 @@ const PROJECTS = [
   }
 ];
 
+/* Process: traditional vs AI-enabled, stage by stage.
+   `w` = length in weeks (sets the bar length). `cycle: true` = ongoing, not counted in totals. */
 const PROCESS = [
-  { t: "Frame the problem", d: "Talk to users, map the job to be done, and decide where AI genuinely helps — and where it doesn't.", time: "Week 1" },
-  { t: "Prototype fast", d: "Working prototypes in days, not slide decks in weeks, so we test real behaviour early.", time: "Week 1–2" },
-  { t: "Build & ship", d: "Production-ready features with evals and guardrails baked in from day one.", time: "Week 3+" },
-  { t: "Measure & scale", d: "Instrument everything, treat model quality as a product metric, double down on what works.", time: "Ongoing" }
+  { t: "Research & discovery",
+    old: { time: "3–4 weeks", w: 3.5, d: "Interviews, hand-written notes and weeks of sticky-note synthesis before anyone sees a pattern.", tools: ["Interviews", "Spreadsheets", "Sticky notes"] },
+    ai:  { time: "4–5 days",  w: 0.9, d: "AI synthesises interviews, reviews, support tickets and competitors in hours — so my time goes into talking to users, not sorting notes.", tools: ["Claude", "Perplexity", "Dovetail"] } },
+  { t: "Define & strategy",
+    old: { time: "2 weeks",  w: 2,   d: "Long PRDs written by hand, then rounds of alignment meetings to agree on them.", tools: ["Docs", "Meetings"] },
+    ai:  { time: "2–3 days", w: 0.5, d: "AI drafts the PRD, user stories and edge cases; I edit and decide. The team aligns around a working demo, not a document.", tools: ["Claude", "Notion AI"] } },
+  { t: "Design & prototype",
+    old: { time: "3–4 weeks", w: 3.5, d: "Wireframes, then high-fidelity mocks, then a clickable prototype that only looks real.", tools: ["Figma", "Static mockups"] },
+    ai:  { time: "3–5 days",  w: 0.8, d: "Explore several UI directions in minutes, then turn the best one into a coded prototype running on real data.", tools: ["Figma Make", "v0", "Claude Code"] } },
+  { t: "Test & validate",
+    old: { time: "2 weeks",  w: 2,   d: "Recruit, schedule and run usability sessions, then spend days writing up findings.", tools: ["Usability labs", "Reports"] },
+    ai:  { time: "2–3 days", w: 0.5, d: "Real users try the working prototype the same week, and AI summarises every session into clear next steps.", tools: ["Maze", "Claude"] } },
+  { t: "Build & ship",
+    old: { time: "6–8 weeks", w: 7,   d: "Design hand-off, spec documents, rework when designs meet reality, and long QA cycles.", tools: ["Hand-off specs", "Jira"] },
+    ai:  { time: "2–3 weeks", w: 2.5, d: "The prototype grows into production code with AI pair-programming, AI-written tests and evals for every AI feature.", tools: ["Cursor", "Claude Code", "GitHub Copilot"] } },
+  { t: "Measure & iterate", cycle: true,
+    old: { time: "Monthly", w: 4, d: "Wait for the monthly analytics report, then plan the next quarter's changes.", tools: ["Dashboards"] },
+    ai:  { time: "Weekly",  w: 1, d: "Ask analytics questions in plain English, track model quality with evals, and ship improvements every week.", tools: ["AI analytics", "Evals"] } }
 ];
 
 const WHY = [
@@ -702,9 +748,26 @@ $("#workList").innerHTML = PROJECTS.map((p, i) => `
 })();
 
 /* ---------- process / why / stats ---------- */
-$("#processGrid").innerHTML = PROCESS.map((s, i) => `
-  <div class="step reveal"><div class="n"><span>[${pad(i + 1)}]</span><span>${s.time}</span></div>
-  <h3>${s.t}</h3><p>${s.d}</p></div>`).join("");
+(() => {
+  const maxW = Math.max(...PROCESS.flatMap(s => [s.old.w, s.ai.w]));
+  const col = (side, x) => `
+    <div class="pc-col ${side}">
+      <div class="pc-k">${side === "ai" ? "AI-enabled" : "Traditional"}</div>
+      <div class="pc-bar"><span class="track"><span class="fill" style="--w:${(x.w / maxW * 100).toFixed(1)}%"></span></span><span class="t">${x.time}</span></div>
+      <p>${x.d}</p>
+      <div class="pc-tools">${x.tools.map(t => `<span>${t}</span>`).join("")}</div>
+    </div>`;
+  $("#processGrid").innerHTML = PROCESS.map((s, i) => `
+    <div class="pc-row reveal">
+      <div class="pc-stage"><span class="mono">[${pad(i + 1)}]</span><h3>${s.t}</h3></div>
+      <div class="pc-cols">${col("old", s.old)}${col("ai", s.ai)}</div>
+    </div>`).join("");
+  const sum = k => PROCESS.filter(s => !s.cycle).reduce((n, s) => n + s[k].w, 0);
+  const o = sum("old"), a = sum("ai");
+  $("#pcOld").textContent = `~${Math.round(o)} weeks`;
+  $("#pcAi").textContent = `~${Math.round(a)} weeks`;
+  $("#pcGain").textContent = `${(o / a).toFixed(1).replace(/\.0$/, "")}×`;
+})();
 $("#whyList").innerHTML = WHY.map(w => `<li><span>→</span><span>${w}</span></li>`).join("");
 
 /* count-up for numeric stats like "8+" */
