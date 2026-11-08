@@ -274,6 +274,29 @@ section.block{padding:clamp(80px,11vw,150px) 0}
 .next .t .wr-arrow{width:72px;height:72px;font-size:28px}
 .next:hover .wr-arrow{transform:rotate(-45deg);background:var(--accent);border-color:var(--accent)}
 
+/* ============ PASSWORD GATE ============ */
+.gate{position:fixed;inset:0;z-index:80;background:rgba(13,13,13,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.gate.open{opacity:1;visibility:visible}
+.gate-card{position:relative;width:min(470px,100%);background:var(--bg);border-radius:24px;padding:36px 32px 28px;transform:translateY(18px);transition:transform .45s var(--ease)}
+.gate.open .gate-card{transform:none}
+.gate.shake .gate-card{animation:shake .42s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.gate-icon{width:52px;height:52px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;margin-bottom:22px}
+.gate-card h2{margin:8px 0 0;font-size:clamp(26px,3vw,32px);letter-spacing:-.03em;line-height:1.1;font-weight:600}
+.gate-sub{margin:10px 0 24px;color:var(--muted)}
+.gate-sub b{color:var(--ink);font-weight:500}
+.gate-field{display:flex;gap:8px}
+.gate-field input{flex:1;min-width:0;min-height:50px;padding:0 20px;border-radius:999px;border:1px solid var(--line);background:var(--card);font:inherit;color:var(--ink)}
+.gate-field input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.gate-field .btn{min-height:50px;justify-content:center}
+.gate-field .btn[disabled]{opacity:.6;transform:none}
+.gate-err{min-height:22px;margin:10px 0 0;color:#B42318;font-size:14px}
+.gate-help{margin:4px 0 0;padding-top:16px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+.gate-close{position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:50%;border:0;background:none;font-size:26px;line-height:1;color:var(--muted)}
+.gate-close:hover{background:rgba(13,13,13,.06);color:var(--ink)}
+.wr-year{display:inline-flex;align-items:center;gap:8px}
+.wr-year svg{opacity:.7}
+
 /* ============ REVEAL ============ */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
 .reveal.in{opacity:1;transform:none}
@@ -307,6 +330,8 @@ section.block{padding:clamp(80px,11vw,150px) 0}
   .t-slide{padding-right:0}
 }
 @media (max-width:520px){
+  .gate-field{flex-direction:column}
+  .gate-card{padding:32px 22px 24px}
   .hero-ctas .btn{flex:1 1 100%;justify-content:center}
 }
 @media (prefers-reduced-motion:reduce){
@@ -387,7 +412,7 @@ section.block{padding:clamp(80px,11vw,150px) 0}
       <p class="reveal">Three recent products. Each case study walks through the problem, what I built, where AI fit in, and what changed.</p>
     </div>
     <div class="work-list" id="workList"></div>
-    <div class="work-foot mono reveal"><span>Hover to preview · click to open</span></div>
+    <div class="work-foot mono reveal"><span>Hover to preview · case studies are password-protected</span></div>
   </div>
 </section>
 <div class="preview" id="preview" aria-hidden="true"></div>
@@ -479,6 +504,24 @@ section.block{padding:clamp(80px,11vw,150px) 0}
 </section>
 </main>
 
+<!-- ============ PASSWORD GATE ============ -->
+<div class="gate" id="gate" aria-hidden="true">
+  <form class="gate-card" id="gateForm" role="dialog" aria-modal="true" aria-labelledby="gateTitle" novalidate>
+    <div class="gate-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+    <p class="label">Password protected</p>
+    <h2 id="gateTitle">This case study is private</h2>
+    <p class="gate-sub">Enter the password to read <b id="gateProject"></b>.</p>
+    <label for="gatePw" class="sr-only">Password</label>
+    <div class="gate-field">
+      <input id="gatePw" type="password" autocomplete="current-password" placeholder="Password" aria-describedby="gateErr">
+      <button type="submit" class="btn" id="gateBtn">Unlock <span class="arr">→</span></button>
+    </div>
+    <p class="gate-err" id="gateErr" role="alert"></p>
+    <p class="gate-help">Don't have the password? <a id="gateMail" href="#">Email me for access</a></p>
+    <button type="button" class="gate-close" id="gateClose" aria-label="Close">×</button>
+  </form>
+</div>
+
 <!-- ============ CASE STUDY PAGE ============ -->
 <div class="case" id="case" role="dialog" aria-modal="true" aria-label="Case study" aria-hidden="true">
   <div class="case-bar">
@@ -507,113 +550,41 @@ const SITE = {
   marquee: ["Ship faster", "Automate the boring", "Delight users", "Cut costs", "Raise funding", "Launch with confidence"]
 };
 
-/* Sample projects — realistic examples to replace with your own work.
-   `kind` picks the mock visual: "chat" | "mobile" | "dashboard".
-   Set `cover` / `gallery` to image paths to use real screenshots instead. */
+/* Projects in "Latest work".
+   Only these list fields are public. The full case studies (role, timeline, problem, approach,
+   AI details, results, learnings, gallery) are encrypted below and unlock with the password.
+   To edit them: node tools/lock.mjs decrypt <password> -> edit private/cases.json ->
+   node tools/lock.mjs encrypt <password>. Never commit private/.
+   `kind` picks the mock visual: "chat" | "mobile" | "dashboard". `cover` = optional image path. */
 const PROJECTS = [
-  {
-    slug: "ledgerly-copilot",
+  { slug: "ledgerly-copilot",
     title: "Ledgerly Copilot",
     summary: "An AI assistant that closes the books for small-business accountants.",
     category: "Fintech · B2B SaaS",
     year: "2026",
     color: "#DCE3F5",
     kind: "chat",
-    cover: "", gallery: ["", ""],
-    role: "Product lead & builder",
-    timeline: "5 months",
-    team: "3 eng · 1 design",
-    platform: "Web app",
-    overview: "Ledgerly is accounting software used by 4,000+ small accounting firms. Month-end close was the most hated part of the job: hours of matching bank lines to invoices and chasing missing receipts.",
-    problem: "Accountants spent around 9 hours per client each month reconciling transactions by hand. Firms couldn't take on new clients without hiring, and churn spiked every quarter-end.",
-    approach: [
-      { t: "Discover", d: "Shadowed 14 accountants during close week and found that 70% of the time went to the same five reconciliation patterns." },
-      { t: "Prototype", d: "Built a clickable copilot in 10 days on real anonymised ledgers; tested it with 6 firms before writing production code." },
-      { t: "Build", d: "Shipped a side-panel copilot that suggests matches, explains each one and asks before posting anything to the ledger." },
-      { t: "Launch & measure", d: "Rolled out to 200 firms behind a flag, tracking acceptance rate, time-to-close and correction rate per suggestion." }
-    ],
-    ai: "An LLM reads bank lines, invoices and past entries, retrieves similar historical matches, and proposes a reconciliation with a confidence score and a plain-English reason. Low-confidence items go to a human queue. A 1,200-case eval set guards every model or prompt change.",
-    stack: ["LLM", "RAG", "Confidence scoring", "Human-in-the-loop", "Evals"],
-    results: [
-      { v: "−62%", l: "Time to close per client" },
-      { v: "91%", l: "Suggestions accepted unedited" },
-      { v: "+18%", l: "Clients handled per accountant" }
-    ],
-    learnings: [
-      "Showing why the AI made a match mattered more than accuracy for earning trust",
-      "A small, sharp eval set beat a large, noisy one for catching regressions",
-      "Next time I'd involve the firm's reviewer role from week one, not week six"
-    ]
-  },
-  {
-    slug: "carenote",
+    cover: "" },
+  { slug: "carenote",
     title: "CareNote",
     summary: "An ambient AI scribe that writes clinic notes while the doctor talks to the patient.",
     category: "Healthtech · Mobile",
     year: "2025",
     color: "#E7DFD0",
     kind: "mobile",
-    cover: "", gallery: ["", ""],
-    role: "Founding product manager",
-    timeline: "7 months",
-    team: "4 eng · 1 design · 1 clinician",
-    platform: "iOS & Android",
-    overview: "CareNote started as a pilot with a network of 30 outpatient clinics in South India where doctors saw 60+ patients a day and wrote notes late into the night.",
-    problem: "Doctors spent nearly 2 hours a day on documentation. Notes were short and inconsistent, which hurt follow-ups, referrals and insurance claims.",
-    approach: [
-      { t: "Discover", d: "Sat in on 80 consultations across three languages to map how a visit actually flows and what a good note needs." },
-      { t: "Prototype", d: "Tested a 'record, then review' flow on a phone in two clinics within three weeks." },
-      { t: "Build", d: "Shipped a one-tap app that records, transcribes mixed-language speech and drafts a structured note for the doctor to sign." },
-      { t: "Launch & measure", d: "Expanded clinic by clinic, measuring documentation time, edit distance on notes and doctor retention." }
-    ],
-    ai: "Speech recognition tuned for code-mixed English, Hindi and Kannada feeds an LLM that drafts a SOAP-format note. Medication names are checked against a drug database, and nothing is saved until the doctor reviews and signs.",
-    stack: ["Speech-to-text", "LLM", "Structured output", "Guardrails", "On-device privacy"],
-    results: [
-      { v: "−74%", l: "Documentation time per visit" },
-      { v: "4.8★", l: "Average app store rating" },
-      { v: "1,100+", l: "Doctors using it weekly" }
-    ],
-    learnings: [
-      "Multilingual speech was the real product problem, not the note writing",
-      "Doctors trusted drafts more once edits were one tap away",
-      "Clinical review in the loop made launch slower but adoption much faster"
-    ]
-  },
-  {
-    slug: "dispatch-ai",
+    cover: "" },
+  { slug: "dispatch-ai",
     title: "Dispatch AI",
     summary: "An agent that triages and resolves support tickets for D2C e-commerce brands.",
     category: "SaaS · Customer support",
     year: "2025",
     color: "#D6E7DC",
     kind: "dashboard",
-    cover: "", gallery: ["", ""],
-    role: "Product builder (0 → 1)",
-    timeline: "10 weeks",
-    team: "Solo + 1 engineer",
-    platform: "Web · Shopify & Zendesk",
-    overview: "A mid-size D2C apparel brand was handling 25,000 support tickets a month with a team of 18, and response times doubled during every sale.",
-    problem: "Over half the tickets were repetitive — order status, returns, size exchanges — but agents still read and routed each one by hand, with a 14-hour average first response.",
-    approach: [
-      { t: "Discover", d: "Tagged 3,000 historical tickets to find the ten intents that made up most of the volume." },
-      { t: "Prototype", d: "Ran the agent in 'shadow mode' for two weeks, drafting replies that humans compared against their own." },
-      { t: "Build", d: "Shipped an agent that reads the ticket, checks the order in Shopify, and either resolves it or routes it with a summary." },
-      { t: "Launch & measure", d: "Turned on auto-resolve one intent at a time, gated by quality scores from weekly human review." }
-    ],
-    ai: "A tool-using agent classifies intent, calls Shopify and courier APIs, applies the brand's return policy and drafts on-brand replies. Refunds above a limit and angry customers always go to a human. A live dashboard tracks resolution quality and cost per ticket.",
-    stack: ["Agents", "Tool use", "Intent classification", "Policy guardrails", "Cost tracking"],
-    results: [
-      { v: "58%", l: "Tickets resolved without a human" },
-      { v: "14h → 3m", l: "First response time" },
-      { v: "−41%", l: "Support cost per order" }
-    ],
-    learnings: [
-      "Shadow mode was the cheapest way to earn the support team's trust",
-      "Releasing one intent at a time made quality easy to reason about",
-      "Clear escalation rules mattered more than a smarter model"
-    ]
-  }
+    cover: "" }
 ];
+
+/* Encrypted case-study details — generated by tools/lock.mjs, do not edit by hand. */
+const CASES_LOCKED = /*LOCKED*/"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"/*END*/;
 
 /* Process: traditional vs AI-enabled, stage by stage.
    `w` = length in weeks (sets the bar length). `cycle: true` = ongoing, not counted in totals. */
@@ -733,7 +704,7 @@ $("#workList").innerHTML = PROJECTS.map((p, i) => `
     <span class="mono">[${pad(i + 1)}]</span>
     <span class="wr-title">${p.title}<span class="wr-sum">${p.summary}</span></span>
     <span class="wr-cat">${p.category}</span>
-    <span class="wr-year mono">${p.year}</span>
+    <span class="wr-year mono"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-label="Password protected" role="img"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>${p.year}</span>
     <span class="wr-arrow" aria-hidden="true">→</span>
   </a>`).join("");
 
@@ -925,6 +896,7 @@ function route() {
   if (m) {
     const i = PROJECTS.findIndex(p => p.slug === m[1]);
     if (i < 0) return;
+    if (!unlocked) { openGate(i); return; }
     if (!caseEl.classList.contains("open")) lastScroll = scrollY;
     caseBody.innerHTML = renderCase(PROJECTS[i], i);
     $("#caseCrumb").textContent = `${pad(i + 1)} / ${pad(PROJECTS.length)}`;
@@ -946,9 +918,71 @@ $("#caseBack").onclick = () => {
   route();
   scrollTo({ top: $("#work").offsetTop - 40, behavior: "instant" });
 };
-addEventListener("keydown", e => { if (e.key === "Escape" && caseEl.classList.contains("open")) $("#caseBack").click(); });
+addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (gate.classList.contains("open")) cancelGate();
+  else if (caseEl.classList.contains("open")) $("#caseBack").click();
+});
 addEventListener("hashchange", route);
-route();
+
+/* ---------- password gate: decrypts CASES_LOCKED in the browser ---------- */
+let unlocked = false;
+const PW_KEY = "cs-pw";
+async function unlock(pw) {
+  const raw = Uint8Array.from(atob(CASES_LOCKED), c => c.charCodeAt(0));
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: raw.slice(0, 16), iterations: 250000, hash: "SHA-256" },
+    base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+  const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: raw.slice(16, 28) }, key, raw.slice(28));
+  const cases = JSON.parse(new TextDecoder().decode(plain));
+  PROJECTS.forEach(p => Object.assign(p, cases[p.slug] || {}));
+  unlocked = true;
+}
+const gate = $("#gate"), gatePw = $("#gatePw"), gateBtn = $("#gateBtn"), gateErr = $("#gateErr");
+$("#gateMail").href = `mailto:${SITE.email}?subject=${encodeURIComponent("Portfolio case study access")}`;
+let gateReturn = null;
+function openGate(i) {
+  gateReturn = document.activeElement;
+  $("#gateProject").textContent = PROJECTS[i].title;
+  gateErr.textContent = ""; gatePw.value = "";
+  gate.classList.add("open"); gate.setAttribute("aria-hidden", "false");
+  document.body.classList.add("locked");
+  setTimeout(() => gatePw.focus(), 60);
+}
+function closeGate() {
+  gate.classList.remove("open"); gate.setAttribute("aria-hidden", "true");
+  if (!caseEl.classList.contains("open")) document.body.classList.remove("locked");
+}
+function cancelGate() {
+  closeGate();
+  history.replaceState("", "", location.pathname + "#work");
+  if (gateReturn && gateReturn.focus) gateReturn.focus({ preventScroll: true });
+}
+$("#gateClose").onclick = cancelGate;
+gate.addEventListener("click", e => { if (e.target === gate) cancelGate(); });
+$("#gateForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const pw = gatePw.value;
+  if (!pw) { gateErr.textContent = "Please enter the password."; gatePw.focus(); return; }
+  gateBtn.disabled = true; gateBtn.firstChild.textContent = "Unlocking… ";
+  try {
+    await unlock(pw);
+    try { sessionStorage.setItem(PW_KEY, pw); } catch {}
+    closeGate(); route();
+  } catch {
+    gateErr.textContent = "That password didn't work. Please try again.";
+    gate.classList.remove("shake"); void gate.offsetWidth; gate.classList.add("shake");
+    gatePw.select();
+  } finally {
+    gateBtn.disabled = false; gateBtn.firstChild.textContent = "Unlock ";
+  }
+});
+
+/* remember the password for this browser tab, then handle any deep link */
+(async () => {
+  try { const pw = sessionStorage.getItem(PW_KEY); if (pw) await unlock(pw); } catch {}
+  route();
+})();
 </script>
 </body>
 </html>
