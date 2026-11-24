@@ -922,7 +922,7 @@ function renderCase(p, i) {
       <div><dt>Team</dt><dd>${p.team}</dd></div>
     </dl>
   </header>
-  <div class="case-cover ph reveal" style="--c:${p.color}">${visual(p, "Cover", p.cover)}</div>
+  ${p.cover ? `<div class="case-cover ph reveal" style="--c:${p.color}">${visual(p, "Cover", p.cover)}</div>` : ""}
 
   ${p.glance ? `<div class="glance">${p.glance.map(g => `
     <div class="g reveal"><div class="v">${g.v}</div><div class="l">${g.l}</div>${g.s ? `<div class="s">${g.s}</div>` : ""}</div>`).join("")}</div>` : ""}
