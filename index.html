@@ -894,7 +894,7 @@ function renderBlocks(p, i) {
     <p class="lede reveal">${p.lede || p.summary}</p>
     <dl class="case-meta reveal">${(p.meta || []).map(m => `<div><dt>${m.k}</dt><dd>${m.v}</dd></div>`).join("")}</dl>
   </header>
-  <div class="case-cover ph reveal" style="--c:${p.color}">${visual(p, "Cover", p.cover)}</div>
+  ${p.cover ? `<div class="case-cover ph reveal" style="--c:${p.color}">${visual(p, "Cover", p.cover)}</div>` : ""}
   ${p.blocks.map(b => (R[b.type] || (() => ""))(b)).join("\n")}
   <a class="next" href="#/work/${next.slug}">
     <span class="label">Next case study</span>
