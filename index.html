@@ -7,29 +7,30 @@
 <meta name="description" content="AI-enabled product builder with 8+ years of turning ideas into shipped products.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ============ TOKENS ============ */
 :root{
-  --bg:#F3F2EE; --ink:#0D0D0D; --muted:#5C5C57; --line:#D9D7D0; --card:#FFFFFF;
-  --accent:#FF5A1F; --dark:#0D0D0D; --on-dark:#F3F2EE; --on-dark-muted:#A9A8A2;
-  --sans:"Inter Tight",system-ui,-apple-system,sans-serif;
-  --serif:"Instrument Serif",Georgia,serif;
+  --bg:#F5F5F3; --ink:#2B303B; --muted:#6B7080; --line:#E2E2DE; --card:#FFFFFF;
+  --accent:#D9622B; --dark:#1F232B; --on-dark:#F5F5F3; --on-dark-muted:#A9ADB6;
+  --sans:"Inter",system-ui,-apple-system,sans-serif;
+  --serif:"Libre Baskerville",Georgia,serif;
   --mono:"JetBrains Mono",ui-monospace,monospace;
-  --wrap:1320px; --pad:clamp(16px,4vw,40px);
+  --wrap:1200px; --pad:clamp(16px,3vw,24px);
   --ease:cubic-bezier(.2,.7,.1,1);
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{margin:0;background:var(--bg) var(--grain);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 body.locked{overflow:hidden}
 a{color:inherit}
 img{max-width:100%;display:block}
 button{font:inherit;color:inherit;cursor:pointer}
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--pad)}
 .mono{font-family:var(--mono);font-size:13px;letter-spacing:.02em}
-.label{font-family:var(--mono);font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-.serif{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em}
+.label{font-size:13px;color:var(--muted)}
+.serif{font-style:normal}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
@@ -42,55 +43,51 @@ button{font:inherit;color:inherit;cursor:pointer}
 .btn .arr{transition:transform .3s var(--ease)}
 .btn:hover .arr{transform:translateX(4px)}
 
-/* ============ HEADER ============ */
-.header{position:fixed;inset:0 0 auto 0;z-index:50;transition:transform .4s var(--ease),background .3s,border-color .3s;border-bottom:1px solid transparent}
-.header.scrolled{background:rgba(243,242,238,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-color:var(--line)}
-.header.hide{transform:translateY(-100%)}
-.header .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;height:72px}
-.logo{font-weight:700;font-size:19px;text-decoration:none;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
-.logo-mark{width:28px;height:28px;border-radius:8px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-size:13px;font-family:var(--mono)}
-.nav{display:flex;align-items:center;gap:30px}
-.nav a{text-decoration:none;font-size:15px;position:relative}
-.nav a.link::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease)}
-.nav a.link:hover::after{transform:scaleX(1);transform-origin:left}
-.avail{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
-.dot{width:8px;height:8px;border-radius:50%;background:#1DB954;position:relative;flex:none}
-.dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:inherit;animation:ping 2s infinite}
-@keyframes ping{0%{transform:scale(1);opacity:.7}80%,100%{transform:scale(2.6);opacity:0}}
-.menu-btn{display:none;background:none;border:1px solid var(--ink);border-radius:999px;min-height:44px;padding:0 18px;font-size:15px}
-.header .btn{min-height:42px;padding:0 18px;font-size:15px}
+/* ============ TOP BAR ============ */
+.top{position:sticky;top:0;z-index:50;background:rgba(245,245,243,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:60px}
+.top nav{display:flex;gap:22px}
+.top nav a{font-size:14px;color:var(--muted);text-decoration:none;padding:12px 0;transition:color .2s}
+.top nav a:hover{color:var(--ink)}
+.top nav a.on{color:var(--accent)}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.dot{width:7px;height:7px;border-radius:50%;background:#2E9E5B;flex:none}
 
-/* mobile menu */
-.mobile-menu{position:fixed;inset:0;z-index:60;background:var(--ink);color:var(--on-dark);padding:24px var(--pad);display:flex;flex-direction:column;transform:translateY(-100%);transition:transform .55s var(--ease);visibility:hidden}
-.mobile-menu.open{transform:none;visibility:visible}
-.mobile-menu .top{display:flex;justify-content:space-between;align-items:center;height:48px}
-.mobile-menu .close{background:none;border:1px solid var(--on-dark);border-radius:999px;min-height:44px;padding:0 18px}
-.mobile-menu nav{margin-top:48px;display:flex;flex-direction:column;gap:6px}
-.mobile-menu nav a{font-size:44px;font-weight:600;letter-spacing:-.03em;text-decoration:none;line-height:1.15}
-.mobile-menu .foot{margin-top:auto;display:flex;flex-direction:column;gap:16px}
+/* ============ HOME ============ */
+.intro{padding:clamp(56px,9vw,112px) 0 clamp(40px,5vw,64px)}
+.intro h1{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(26px,3.3vw,40px);line-height:1.32;letter-spacing:-.01em;max-width:980px}
+.facts{margin:40px 0 0;display:flex;flex-wrap:wrap;gap:20px 64px;font-size:14px;line-height:1.55}
+.facts div{max-width:280px}
+.facts dt{color:var(--muted)}
+.facts dd{margin:4px 0 0}
+.work{display:flex;flex-direction:column;gap:clamp(36px,5vw,56px);padding:0 0 clamp(80px,10vw,128px)}
+.proj{display:block;text-decoration:none;color:inherit}
+.proj .img{position:relative;aspect-ratio:16/9;border-radius:4px;overflow:hidden;background:var(--c,#ddd)}
+.proj .img .bg{position:absolute;inset:0;background:var(--g);transition:transform 1.2s var(--ease)}
+.proj .img::after{content:"";position:absolute;inset:0;background:var(--grain);background-size:160px;opacity:.9;mix-blend-mode:multiply;pointer-events:none}
+.proj .img .t{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:#fff;font-weight:600;font-size:clamp(26px,4.4vw,52px);letter-spacing:-.025em;line-height:1.1;text-shadow:0 1px 24px rgba(0,0,0,.08)}
+.proj:hover .img .bg{transform:scale(1.04)}
+.cap{margin-top:12px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:14px}
+.cap b{font-weight:500}
+.cap .sl{color:#B5B8BF}
+.cap .st{color:var(--muted)}
+.cap svg{color:var(--muted);margin-left:2px}
+.proj:hover .cap b{text-decoration:underline;text-underline-offset:4px}
+.work-note{margin:-24px 0 clamp(80px,10vw,120px);font-size:13px;color:var(--muted)}
 
-/* ============ HERO ============ */
-.hero{padding:clamp(130px,18vh,200px) 0 clamp(56px,8vw,96px)}
-.hero h1{margin:0;font-weight:600;font-size:clamp(52px,9.4vw,148px);line-height:.92;letter-spacing:-.05em}
-.hero h1 .serif{letter-spacing:-.02em}
-.rotator{display:inline-block;position:relative;color:var(--ink)}
-.rotator span{display:inline-block;transition:transform .5s var(--ease),opacity .5s var(--ease)}
-.rotator span.out{transform:translateY(-30%);opacity:0}
-.rotator span.pre{transform:translateY(30%);opacity:0;transition:none}
-.hero-bottom{margin-top:clamp(40px,6vw,72px);display:flex;flex-wrap:wrap;gap:32px 64px;align-items:flex-end;justify-content:space-between}
-.hero-bottom p{margin:0;max-width:520px;font-size:clamp(18px,1.6vw,21px);color:var(--muted)}
-.hero-bottom p strong{color:var(--ink);font-weight:500}
-.hero-ctas{display:flex;flex-wrap:wrap;gap:12px}
-.hero-meta{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between}
-
-/* ============ MARQUEE ============ */
-.marquee{border-block:1px solid var(--line);overflow:hidden;padding:22px 0;background:var(--card)}
-.marquee-track{display:flex;gap:48px;width:max-content;animation:marq 38s linear infinite}
-.marquee:hover .marquee-track{animation-play-state:paused}
-.marquee-item{display:flex;align-items:center;gap:48px;font-size:clamp(26px,3.4vw,44px);font-weight:500;letter-spacing:-.03em;white-space:nowrap}
-.marquee-item i{font-family:var(--serif);font-weight:400}
-.marquee-item .star{width:14px;height:14px;background:var(--accent);border-radius:50%}
-@keyframes marq{to{transform:translateX(-50%)}}
+/* ============ ABOUT VIEW ============ */
+body.on-about #home{display:none}
+body:not(.on-about) #about{display:none}
+.about-intro{padding:clamp(56px,9vw,112px) 0 clamp(32px,4vw,48px);display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(32px,5vw,80px)}
+.about-intro h1{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(24px,2.8vw,34px);line-height:1.4;letter-spacing:-.01em}
+.about-intro .side{font-size:14px;color:var(--muted);display:flex;flex-direction:column;gap:18px;padding-top:8px}
+.about-intro .side b{display:block;color:var(--ink);font-weight:500}
+.mailto{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0;background:none;border:0;border-bottom:1px solid var(--ink);font-size:15px}
+.mailto .hint{font-size:12px;color:var(--muted)}
+.foot{border-top:1px solid var(--line);padding:24px 0 40px;font-size:13px;color:var(--muted)}
+.foot .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+.foot a{color:var(--muted)}
+@media (max-width:760px){.status{display:none}.about-intro{grid-template-columns:minmax(0,1fr)}}
 
 /* ============ SECTIONS ============ */
 section.block{padding:clamp(80px,11vw,150px) 0}
@@ -98,28 +95,8 @@ section.block{padding:clamp(80px,11vw,150px) 0}
 .sec-head h2{margin:12px 0 0;font-weight:600;font-size:clamp(36px,5.2vw,76px);line-height:1;letter-spacing:-.045em;max-width:900px}
 .sec-head p{margin:0;max-width:380px;color:var(--muted)}
 
-/* ============ WORK INDEX ============ */
-.work-list{border-top:1px solid var(--ink)}
-.work-row{display:grid;grid-template-columns:70px minmax(0,1fr) 200px 80px 48px;gap:20px;align-items:center;padding:30px 0;border-bottom:1px solid var(--line);text-decoration:none;position:relative;transition:padding .45s var(--ease),color .3s}
-.work-row::before{content:"";position:absolute;inset:0;background:var(--ink);transform:scaleY(0);transform-origin:bottom;transition:transform .45s var(--ease);z-index:-1}
-.work-row:hover{color:var(--bg);padding-left:20px;padding-right:20px}
-.work-row:hover::before{transform:scaleY(1)}
-.work-row:hover .wr-cat,.work-row:hover .mono{color:var(--on-dark-muted)}
-.wr-title{font-size:clamp(28px,3.6vw,52px);font-weight:600;letter-spacing:-.04em;line-height:1.05}
-.wr-sum{display:block;font-size:16px;line-height:1.45;font-weight:400;letter-spacing:0;color:var(--muted);margin-top:6px;transition:color .3s}
-.work-row:hover .wr-sum{color:var(--on-dark-muted)}
-.wr-cat{font-size:15px;color:var(--muted);transition:color .3s}
-.wr-arrow{width:48px;height:48px;border-radius:50%;border:1px solid currentColor;display:grid;place-items:center;transition:transform .45s var(--ease),background .3s}
-.work-row:hover .wr-arrow{transform:rotate(-45deg);background:var(--accent);border-color:var(--accent);color:var(--ink)}
-.work-row .wr-thumb{display:none}
-.work-foot{margin-top:28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted)}
-
-/* cursor preview */
-.preview{position:fixed;left:0;top:0;width:340px;aspect-ratio:4/3;pointer-events:none;z-index:40;border-radius:14px;overflow:hidden;opacity:0;transform:translate(-50%,-50%) scale(.6);transition:opacity .3s,transform .4s var(--ease);box-shadow:0 30px 60px -20px rgba(0,0,0,.35)}
-.preview.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
-.preview .ph{width:100%;height:100%}
-
-
+/* ============ SHARED ============ */
+.wr-arrow{width:48px;height:48px;border-radius:50%;border:1px solid currentColor;display:inline-grid;place-items:center;transition:transform .45s var(--ease),background .3s}
 /* product mock visual */
 .ph{position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:18px;background:var(--c,#E6E2D8);color:var(--ink);overflow:hidden}
 .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -131,24 +108,10 @@ section.block{padding:clamp(80px,11vw,150px) 0}
 .ph .bubble.me{align-self:flex-end;background:var(--ink);color:var(--bg)}
 .ph .bubble.ai{border:1px solid rgba(13,13,13,.1)}
 .ph .chipline{flex:1;min-width:0;font-family:var(--mono);font-size:10px;padding:6px 8px;border-radius:6px;background:rgba(13,13,13,.06);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ph .ph-ui.phone{background:transparent;align-items:center;padding:0}
-.ph .screen{height:100%;aspect-ratio:9/16;max-width:62%;background:#fff;border:6px solid var(--ink);border-radius:22px;padding:12px;display:flex;flex-direction:column;gap:7px;box-sizing:border-box}
-.ph .rec{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px}
-.ph .rec span{width:8px;height:8px;border-radius:50%;background:var(--accent)}
-.ph .note{margin-top:4px;padding:8px;border-radius:8px;background:rgba(13,13,13,.05);display:flex;flex-direction:column;gap:5px;font-size:11px}
+.ph .ph-ui>.chipline{flex:none}
 .ph .pill{display:inline-block;padding:6px 12px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:11px;font-weight:500}
 .ph .pill.ghost{background:transparent;color:var(--ink);border:1px solid rgba(13,13,13,.25)}
 .ph .mini{font-family:var(--mono);font-size:10px;color:var(--muted)}
-.ph .ph-ui>.chipline{flex:none}
-.wr-thumb .opt{display:none}
-.ph .step{flex:none;font-size:11px;padding:6px 8px;border-radius:6px;background:rgba(13,13,13,.05);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ph .step.done{color:var(--muted)}
-.ph .sign{margin-top:auto;text-align:center;padding:6px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:11px}
-.ph .kpis{display:flex;gap:8px}
-.ph .kpis div{flex:1;padding:8px;border-radius:8px;background:#fff;font-size:10px;color:var(--muted)}
-.ph .kpis b{display:block;font-size:18px;color:var(--ink);letter-spacing:-.03em}
-.ph .bars{flex:1;display:flex;align-items:flex-end;gap:6px;min-height:40px}
-.ph .bars i{flex:1;border-radius:4px 4px 0 0;background:var(--ink);opacity:.82}
 
 /* ============ PROCESS ============ */
 .pc-summary{display:flex;flex-wrap:wrap;align-items:flex-end;gap:20px 40px;padding:32px 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--line)}
@@ -207,19 +170,6 @@ section.block{padding:clamp(80px,11vw,150px) 0}
 .faq-item.open .faq-a{grid-template-rows:1fr}
 .faq-a>div{overflow:hidden}
 .faq-a p{margin:0;padding:0 56px 26px 0;color:var(--muted)}
-
-/* ============ CONTACT ============ */
-.contact{background:var(--accent);color:var(--ink);padding:clamp(90px,12vw,160px) 0 0}
-.contact .label{color:var(--ink)}
-.contact h2{margin:16px 0 0;font-size:clamp(56px,11vw,180px);line-height:.88;letter-spacing:-.06em;font-weight:600}
-.contact-row{margin-top:clamp(40px,5vw,64px);display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.email-btn{display:inline-flex;align-items:center;gap:14px;min-height:64px;padding:0 28px;border-radius:999px;background:var(--ink);color:var(--bg);border:0;font-size:clamp(17px,1.8vw,22px);font-weight:500}
-.email-btn .hint{font-family:var(--mono);font-size:12px;color:var(--on-dark-muted)}
-.contact .btn.ghost{border-color:var(--ink)}
-.footer{margin-top:clamp(80px,10vw,140px);border-top:1px solid rgba(13,13,13,.25);padding:24px 0 32px;display:flex;flex-wrap:wrap;gap:16px 32px;justify-content:space-between;align-items:center;font-size:15px}
-.footer nav{display:flex;flex-wrap:wrap;gap:20px}
-.footer a{text-decoration:none}
-.footer a:hover{text-decoration:underline;text-underline-offset:4px}
 
 /* ============ CASE STUDY PAGE ============ */
 .case{position:fixed;inset:0;z-index:70;background:var(--bg);overflow-y:auto;overscroll-behavior:contain;transform:translateY(100%);transition:transform .7s var(--ease);visibility:hidden}
@@ -357,6 +307,47 @@ section.block{padding:clamp(80px,11vw,150px) 0}
 .wr-year{display:inline-flex;align-items:center;gap:8px}
 .wr-year svg{opacity:.7}
 
+/* ============ EDITORIAL THEME FOR CASE PAGES ============ */
+.sec-head h2,.case-hero h1,.case-sec h2,.insight h2,.next .t,.faq h2,.why h2{font-family:var(--serif)!important;font-weight:400!important;letter-spacing:-.01em!important}
+.sec-head h2{font-size:clamp(26px,3vw,38px);line-height:1.25}
+.case-hero h1{font-size:clamp(30px,4.4vw,54px);line-height:1.18}
+.case-hero .lede{font-size:clamp(17px,1.6vw,20px);line-height:1.55}
+.case-sec h2{font-size:clamp(22px,2.2vw,30px);line-height:1.3}
+.insight h2{font-size:clamp(26px,3.4vw,44px);line-height:1.22}
+.next .t{font-size:clamp(28px,4.4vw,56px);line-height:1.15}
+.case-meta{border-top-color:var(--line)}
+.case-meta dt{font-family:var(--sans);text-transform:none;letter-spacing:0;font-size:13px}
+.case-meta dd{font-weight:400}
+.case-bar{background:rgba(245,245,243,.92)}
+.case-back{border-color:var(--line);font-size:14px}
+.card,.glance .g,.result,.tbl-wrap,.cmp-g,.callout,.pc-time,.step{border-radius:8px}
+.insight,.ai-box{border-radius:8px}
+.glance .v,.result .v,.callout b,.pc-summary b{font-family:var(--serif);font-weight:400;letter-spacing:-.02em}
+.card b,.approach li b,.two h3{font-weight:500}
+.approach,.why-list,.faq-list,.pc-summary{border-top-color:var(--line)!important}
+.why-list li span:first-child{color:var(--accent)}
+.faq-q{font-weight:400}
+.case{background:var(--bg) var(--grain)}
+
+/* calm-down overrides for the About view */
+.wrap{padding-left:var(--pad)!important;padding-right:var(--pad)!important}
+#about section.block{padding-top:clamp(48px,6vw,80px);padding-bottom:clamp(48px,6vw,80px);background:linear-gradient(var(--line),var(--line)) var(--pad) 0/calc(100% - 2*var(--pad)) 1px no-repeat}
+.pc-save{background:#F4E4DA!important;color:var(--ink)!important}
+#about .sec-head{margin-bottom:32px}
+#about .sec-head p{font-size:15px;color:var(--muted)}
+.why-list li{font-size:17px;padding:16px 0;letter-spacing:0}
+.faq-q{font-size:17px;padding:18px 0;letter-spacing:0}
+.faq-q .pm{width:30px;height:30px}
+.faq-a p{font-size:15px}
+.pc-summary b{font-size:clamp(32px,4vw,52px)!important}
+.pc-gain{background:#F4E4DA!important;color:var(--ink)}
+.pc-gain span{font-size:14px!important}
+.pc-stage h3{font-family:var(--serif);font-weight:400;font-size:clamp(20px,2vw,24px)!important;letter-spacing:-.01em}
+.pc-k,.pc-legend,.pc-note,.pc-time-head .pc-k{font-family:var(--sans)!important;text-transform:none!important;letter-spacing:0!important;font-size:13px!important}
+.pc-save{font-family:var(--sans)!important}
+.pc-tools span{font-family:var(--sans);font-size:12px}
+.chip{font-family:var(--sans)}
+
 /* ============ REVEAL ============ */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
 .reveal.in{opacity:1;transform:none}
@@ -405,86 +396,59 @@ section.block{padding:clamp(80px,11vw,150px) 0}
 
 <a href="#work" class="sr-only">Skip to work</a>
 
-<!-- ============ HEADER ============ -->
-<header class="header" id="header">
+<!-- ============ TOP BAR ============ -->
+<header class="top">
   <div class="wrap">
-    <a href="#top" class="avail" aria-label="Back to top" style="text-decoration:none"><span class="dot"></span><span data-availability></span></a>
-    <nav class="nav" aria-label="Main">
-      <a class="link" href="#work">Case studies</a>
-      <a class="link" href="#process">Process</a>
-      <a class="link" href="#about">About</a>
-      <a class="link" href="#faq">FAQ</a>
-      <a class="link" href="#contact">Contact</a>
-      <button class="menu-btn" id="menuOpen" aria-expanded="false" aria-controls="mobileMenu">Menu</button>
+    <nav aria-label="Main">
+      <a href="#" data-view="home" class="on">Work</a>
+      <a href="#/about" data-view="about">About</a>
+      <a href="#/about#contact" data-view="contact">Contact</a>
     </nav>
+    <span class="status"><span class="dot" aria-hidden="true"></span><span data-availability></span></span>
   </div>
 </header>
 
-<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-  <div class="top">
-    <span class="avail" style="background:transparent;border-color:#444"><span class="dot"></span><span data-availability></span></span>
-    <button class="close" id="menuClose">Close</button>
-  </div>
-  <nav aria-label="Mobile">
-    <a href="#work">Case studies</a>
-    <a href="#process">Process</a>
-    <a href="#about">About</a>
-    <a href="#faq">FAQ</a>
-    <a href="#contact">Contact</a>
-  </nav>
-</div>
-
 <main id="top">
 
-<!-- ============ HERO ============ -->
-<section class="hero">
-  <div class="wrap">
-    <h1 class="reveal">Turning ideas into <span class="serif">working</span><br><span class="rotator" id="rotator"><span>AI products.</span></span></h1>
-    <div class="hero-bottom">
-      <p class="reveal">I'm <strong data-name></strong>. For 8+ years I've taken products from idea to launch — strategy, design and shipping — and today I build with AI at every step, from research to the features users touch.</p>
-      <div class="hero-ctas reveal">
-        <a class="btn" href="#work">See case studies <span class="arr">↓</span></a>
-        <a class="btn ghost" href="#contact">Get in touch</a>
-      </div>
-    </div>
-    <div class="hero-meta mono reveal">
-      <span>Based in <span data-location></span> · open to Bengaluru or remote</span>
-      <span>Local time <span id="clock">--:--</span></span>
-      <span>Scroll to explore ↓</span>
-    </div>
-  </div>
-</section>
+<!-- ============ HOME: intro + work ============ -->
+<div id="home">
+  <section class="intro wrap">
+    <h1><span data-name></span> is an AI-enabled product builder who turns fuzzy ideas into products people use — and uses AI at every step to get there faster.</h1>
+    <dl class="facts">
+      <div><dt>Currently</dt><dd>Designing AI-powered HR products in Hyderabad</dd></div>
+      <div><dt>Previously</dt><dd>8+ years taking products from idea to launch — strategy, design and shipping</dd></div>
+      <div><dt>Open to</dt><dd>Full-time roles · Bengaluru or remote · from Dec ’26</dd></div>
+    </dl>
+  </section>
+  <section class="wrap" id="work" aria-label="Work">
+    <div class="work" id="workList"></div>
+  </section>
+</div>
 
-<!-- ============ MARQUEE ============ -->
-<div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee"></div></div>
+<!-- ============ ABOUT VIEW ============ -->
+<div id="about">
+  <section class="wrap about-intro">
+    <h1>I'm <span data-name></span>, an AI-enabled product builder with 8+ years of taking products from idea to launch. Lately I design AI-powered HR products — a rules engine for leave, AI policy setup and an AI helpdesk — and I use AI at every step: research, prototyping and shipping.</h1>
+    <div class="side">
+      <div><b>Based in</b><span data-location></span> · open to Bengaluru or remote</div>
+      <div><b>Availability</b><span data-availability></span></div>
+      <div id="contact"><b>Contact</b><button class="mailto" id="emailBtn"><span data-email></span><span class="hint" id="emailHint">Copy</span></button></div>
+    </div>
+  </section>
 
-<!-- ============ WORK ============ -->
-<section class="block" id="work">
-  <div class="wrap">
+  <section class="block wrap" id="how" style="padding-top:clamp(40px,5vw,64px)">
+    <div class="why">
+      <div><p class="label">How I work</p><h2 style="margin:8px 0 0;font-size:clamp(24px,2.6vw,32px);line-height:1.3">Part product lead, part designer, part builder.</h2></div>
+      <ul class="why-list" id="whyList"></ul>
+    </div>
+  </section>
+
+  <section class="block wrap" id="process">
     <div class="sec-head">
-      <div class="reveal">
-        <p class="label">[01] Latest work</p>
-        <h2>What happens when AI does <span class="serif">real</span> work?</h2>
-      </div>
-      <p class="reveal">Three recent products. Each case study walks through the problem, what I built, where AI fit in, and what changed.</p>
+      <div><p class="label">Process</p><h2>The traditional design process is an old story.</h2></div>
+      <p>The old playbook moved in hand-offs: research, then documents, then wireframes, then build — each waiting on the last. AI changes the game altogether. Here's how a first release compares, stage by stage.</p>
     </div>
-    <div class="work-list" id="workList"></div>
-    <div class="work-foot mono reveal"><span>Hover to preview · case studies are password-protected</span></div>
-  </div>
-</section>
-<div class="preview" id="preview" aria-hidden="true"></div>
-
-<!-- ============ PROCESS ============ -->
-<section class="block" id="process" style="padding-top:0">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="reveal">
-        <p class="label">[02] Process</p>
-        <h2>The traditional design process is an <span class="serif">old story.</span></h2>
-      </div>
-      <p class="reveal">The old playbook moved in hand-offs: research, then documents, then wireframes, then build — each waiting on the last. AI changes the game altogether. Here's how a first release compares, stage by stage.</p>
-    </div>
-    <div class="pc-summary reveal">
+    <div class="pc-summary">
       <div class="was"><span class="label">Traditional</span><b id="pcOld"></b></div>
       <div class="pc-arrow" aria-hidden="true">→</div>
       <div><span class="label">AI-enabled</span><b id="pcAi"></b></div>
@@ -493,53 +457,24 @@ section.block{padding:clamp(80px,11vw,150px) 0}
     <div class="pc-legend mono"><span><i class="sw old"></i>Traditional process</span><span><i class="sw ai"></i>My AI-enabled process</span><span>Bar length = time a stage takes, on the same scale</span></div>
     <div id="processGrid"></div>
     <p class="pc-note mono">Typical timelines for a first release. Every project is different.</p>
-  </div>
-</section>
+  </section>
 
-<!-- ============ ABOUT / WHY ============ -->
-<section class="block" id="about" style="border-top:1px solid var(--line)">
-  <div class="wrap">
-    <div class="why">
-      <div class="reveal">
-        <p class="label">[03] About</p>
-        <h2 style="margin:12px 0 0;font-size:clamp(36px,4.6vw,64px);line-height:1;letter-spacing:-.045em;font-weight:600">Part product lead, part designer, <span class="serif">part builder.</span></h2>
-        <p style="margin:28px 0 0;color:var(--muted);font-size:19px;max-width:520px">[Two or three sentences in your own voice: where you started, the kinds of products you've built, the domains you know best, and why you now build with AI.]</p>
-        <div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap">
-          <a class="btn ghost" data-link="resume" href="#">Download résumé <span class="arr">↗</span></a>
-        </div>
-      </div>
-      <ul class="why-list reveal" id="whyList"></ul>
+  <section class="block wrap" id="faq">
+    <div class="faq">
+      <div><p class="label">FAQ</p><h2 style="margin:8px 0 0;font-size:clamp(24px,2.6vw,32px);line-height:1.3">Questions, answered.</h2>
+        <p style="margin:16px 0 0;color:var(--muted);font-size:15px">Something else on your mind? <a href="#contact">Get in touch.</a></p></div>
+      <div class="faq-list" id="faqList"></div>
     </div>
-  </div>
-</section>
-
-<!-- ============ FAQ ============ -->
-<section class="block" id="faq" style="border-top:1px solid var(--line)">
-  <div class="wrap faq">
-    <div class="reveal">
-      <p class="label">[04] FAQ</p>
-      <h2 style="margin:12px 0 0;font-size:clamp(36px,4.6vw,64px);line-height:1;letter-spacing:-.045em;font-weight:600">Questions, <span class="serif">answered.</span></h2>
-      <p style="margin:24px 0 0;color:var(--muted)">Something else on your mind? <a href="#contact">Get in touch.</a></p>
-    </div>
-    <div class="faq-list reveal" id="faqList"></div>
-  </div>
-</section>
-
-<!-- ============ CONTACT ============ -->
-<section class="contact" id="contact">
-  <div class="wrap">
-    <p class="label">[05] Contact</p>
-    <h2>Let's build<br><span class="serif">something</span> real.</h2>
-    <div class="contact-row">
-      <button class="email-btn" id="emailBtn"><span data-email></span><span class="hint" id="emailHint">Click to copy</span></button>
-    </div>
-    <footer class="footer">
-      <span>© <span id="year"></span> <span data-name></span></span>
-      <a href="#top">Back to top ↑</a>
-    </footer>
-  </div>
-</section>
+  </section>
+</div>
 </main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>© <span id="year"></span> <span data-name></span> · <span data-location></span>, <span id="clock">--:--</span></span>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
 
 <!-- ============ PASSWORD GATE ============ -->
 <div class="gate" id="gate" aria-hidden="true">
@@ -601,6 +536,8 @@ const PROJECTS = [
     year: "2026",
     color: "#DCE3F5",
     kind: "leave",
+    status: "In development 2026",
+    grad: "radial-gradient(120% 90% at 15% 85%, #B8A6E0 0%, transparent 55%), radial-gradient(90% 80% at 85% 10%, #E7B0A0 0%, transparent 60%), linear-gradient(135deg, #E9A867 0%, #D98B5B 100%)",
     cover: "" },
   { slug: "ai-policy-automation",
     title: "AI Policy Automation",
@@ -609,6 +546,8 @@ const PROJECTS = [
     year: "2026",
     color: "#D6E7DC",
     kind: "policy",
+    status: "Alpha pilot 2026",
+    grad: "radial-gradient(110% 90% at 80% 90%, #9CC8C0 0%, transparent 55%), radial-gradient(90% 80% at 10% 10%, #E8E2C8 0%, transparent 60%), linear-gradient(135deg, #6FA493 0%, #4E8676 100%)",
     cover: "" },
   { slug: "ai-helpdesk",
     title: "AI Helpdesk",
@@ -617,6 +556,8 @@ const PROJECTS = [
     year: "2026",
     color: "#E9DCE9",
     kind: "helpdesk",
+    status: "Case study 2026",
+    grad: "radial-gradient(110% 90% at 20% 15%, #C9D4F5 0%, transparent 55%), radial-gradient(90% 80% at 85% 85%, #E6B8D8 0%, transparent 60%), linear-gradient(135deg, #8E9BE0 0%, #6E78C6 100%)",
     cover: "" }
 ];
 
@@ -707,57 +648,13 @@ const clockFmt = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-
 const tick = () => $("#clock").textContent = `${clockFmt.format(new Date())} ${SITE.tzLabel}`;
 tick(); setInterval(tick, 15000);
 
-/* ---------- rotating hero word ---------- */
-(() => {
-  const span = $("#rotator span"); let i = 0;
-  span.textContent = SITE.rotatingWords[0];
-  if (reduced || SITE.rotatingWords.length < 2) return;
-  setInterval(() => {
-    span.classList.add("out");
-    setTimeout(() => {
-      i = (i + 1) % SITE.rotatingWords.length;
-      span.textContent = SITE.rotatingWords[i];
-      span.classList.remove("out"); span.classList.add("pre");
-      requestAnimationFrame(() => requestAnimationFrame(() => span.classList.remove("pre")));
-    }, 450);
-  }, 2600);
-})();
-
-/* ---------- marquee ---------- */
-(() => {
-  const words = SITE.marquee.map((w, i) => i % 2 ? `<i>${w}</i>` : w);
-  const set = words.map(w => `<span class="marquee-item">${w}<span class="star"></span></span>`).join("");
-  $("#marquee").innerHTML = set + set;
-})();
-
-/* ---------- work index ---------- */
-$("#workList").innerHTML = PROJECTS.map((p, i) => `
-  <a class="work-row reveal" href="#/work/${p.slug}" data-i="${i}">
-    <div class="wr-thumb ph" style="--c:${p.color}">${visual(p, "Cover", p.cover)}</div>
-    <span class="mono">[${pad(i + 1)}]</span>
-    <span class="wr-title">${p.title}<span class="wr-sum">${p.summary}</span></span>
-    <span class="wr-cat">${p.category}</span>
-    <span class="wr-year mono"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-label="Password protected" role="img"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>${p.year}</span>
-    <span class="wr-arrow" aria-hidden="true">→</span>
+/* ---------- work (home) ---------- */
+const LOCK_SVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Password protected"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`;
+$("#workList").innerHTML = PROJECTS.map(p => `
+  <a class="proj reveal" href="#/work/${p.slug}">
+    <div class="img"><div class="bg" style="--g:${p.grad}"></div><div class="t">${p.title}</div></div>
+    <div class="cap"><b>${p.title}</b><span class="sl">/</span><span class="st">${p.status}</span>${LOCK_SVG}</div>
   </a>`).join("");
-
-/* cursor-follow preview */
-(() => {
-  const pv = $("#preview");
-  if (!matchMedia("(hover:hover) and (min-width:761px)").matches) return;
-  let x = 0, y = 0, cx = 0, cy = 0, raf;
-  const loop = () => { cx += (x - cx) * .14; cy += (y - cy) * .14; pv.style.left = cx + "px"; pv.style.top = cy + "px"; raf = requestAnimationFrame(loop); };
-  $$(".work-row").forEach(row => {
-    row.addEventListener("mouseenter", e => {
-      const p = PROJECTS[row.dataset.i];
-      pv.innerHTML = `<div class="ph" style="--c:${p.color}">${visual(p, p.year, p.cover)}</div>`;
-      x = cx = e.clientX + 200; y = cy = e.clientY;
-      pv.classList.add("on"); cancelAnimationFrame(raf); loop();
-    });
-    row.addEventListener("mousemove", e => { x = e.clientX + 200; y = e.clientY; });
-    row.addEventListener("mouseleave", () => { pv.classList.remove("on"); setTimeout(() => cancelAnimationFrame(raf), 400); });
-  });
-})();
 
 /* ---------- process / why / stats ---------- */
 (() => {
@@ -823,26 +720,6 @@ $("#emailBtn").addEventListener("click", async () => {
   catch { location.href = `mailto:${SITE.email}`; return; }
   setTimeout(() => hint.textContent = "Click to copy", 1800);
 });
-
-/* ---------- header hide on scroll ---------- */
-(() => {
-  const h = $("#header"); let last = 0;
-  addEventListener("scroll", () => {
-    const y = scrollY;
-    h.classList.toggle("scrolled", y > 10);
-    h.classList.toggle("hide", y > last && y > 300);
-    last = y;
-  }, { passive: true });
-})();
-
-/* ---------- mobile menu ---------- */
-(() => {
-  const m = $("#mobileMenu"), open = $("#menuOpen");
-  const set = v => { m.classList.toggle("open", v); m.setAttribute("aria-hidden", !v); open.setAttribute("aria-expanded", v); document.body.classList.toggle("locked", v); };
-  open.onclick = () => set(true);
-  $("#menuClose").onclick = () => set(false);
-  $$("a", m).forEach(a => a.addEventListener("click", () => set(false)));
-})();
 
 /* ---------- reveal on scroll ---------- */
 const io = new IntersectionObserver(es => es.forEach(e => {
@@ -977,7 +854,19 @@ function renderCase(p, i) {
     <span class="t">${next.title}<span class="wr-arrow" aria-hidden="true">→</span></span>
   </a>`;
 }
+function setView() {
+  const h = location.hash;
+  if (h.startsWith("#/work/")) return;
+  const about = h.startsWith("#/about") || h === "#contact" || h === "#faq" || h === "#process";
+  const was = document.body.classList.contains("on-about");
+  document.body.classList.toggle("on-about", about);
+  $$(".top nav a").forEach(a => a.classList.toggle("on", a.dataset.view === (h.includes("contact") ? "contact" : about ? "about" : "home")));
+  if (about !== was) scrollTo({ top: 0, behavior: "instant" });
+  if (h.includes("contact")) setTimeout(() => $("#contact").scrollIntoView({ block: "center" }), 0);
+  if (about) $$(".reveal:not(.in)", $("#about")).forEach(el => el.classList.add("in"));
+}
 function route() {
+  setView();
   const m = location.hash.match(/^#\/work\/(.+)$/);
   if (m) {
     const i = PROJECTS.findIndex(p => p.slug === m[1]);
