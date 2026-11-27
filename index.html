@@ -7,13 +7,13 @@
 <meta name="description" content="Purushotham is an AI-enabled product builder with 8+ years of taking products from idea to launch.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playwrite+FR+Trad:wght@300;400&family=EB+Garamond:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ================= TOKENS ================= */
 :root{
   --bg:#F6F6F5; --ink:50 64 79; --accent:#E65F2E; --panel:255 255 255;
-  --serif:"EB Garamond",Garamond,Georgia,serif;
-  --script:"Playwrite FR Trad","EB Garamond",cursive;
+  --serif:var(--sans);
+  --script:var(--sans);
   --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
   --side:258px; --col:922px; --read:688px;
   --ease:cubic-bezier(.2,.7,.1,1);
@@ -60,8 +60,8 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 .main{margin-left:max(var(--side), calc((100vw - var(--col)) / 2));width:min(var(--col), calc(100vw - var(--side) - 48px));padding:240px 0 0}
 
 /* ---------- home ---------- */
-.hero{margin:0;font-family:var(--script);font-weight:300;font-size:clamp(32px,3.2vw,46px);line-height:1.6;letter-spacing:0;color:rgb(var(--ink))}
-.facts{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));column-gap:16px;row-gap:24px;padding:56px 0 56px}
+.hero{margin:0;font-family:var(--sans);font-weight:500;font-size:clamp(36px,3.6vw,52px);line-height:1.15;letter-spacing:-.035em;color:rgb(var(--ink))}
+.facts{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));column-gap:16px;row-gap:24px;padding:40px 0 56px}
 .facts .f{display:flex;flex-direction:column;gap:4px}
 .facts .f1{grid-column:span 2}
 .facts .f2{grid-column:span 4;max-width:384px}
@@ -98,13 +98,13 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 .mock .src{font-size:.85em;color:rgba(50,64,79,.5)}
 
 /* ---------- process & about pages ---------- */
-.ptitle{margin:0;font-family:var(--script);font-weight:300;font-size:clamp(26px,2.4vw,34px);line-height:1.65;letter-spacing:0;max-width:780px}
+.ptitle{margin:0;font-family:var(--sans);font-weight:500;font-size:clamp(28px,2.6vw,38px);line-height:1.2;letter-spacing:-.03em;max-width:780px}
 .lead{max-width:440px;display:flex;flex-direction:column;gap:12px;color:rgb(var(--ink) / .55)}
 .lead a{color:rgb(var(--ink) / .8)}
 .lead a:hover{color:var(--accent)}
 .sumrow{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));column-gap:16px;row-gap:20px;padding:40px 0 48px}
 .sumrow .f{grid-column:span 2;display:flex;flex-direction:column;gap:4px}
-.sumrow .big{font-family:var(--serif);font-size:28px;line-height:1.2;letter-spacing:-.02em;color:rgb(var(--ink))}
+.sumrow .big{font-family:var(--sans);font-weight:500;font-size:28px;line-height:1.2;letter-spacing:-.03em;color:rgb(var(--ink))}
 .sumrow .was{text-decoration:line-through;text-decoration-thickness:1px;color:rgb(var(--ink) / .45)}
 .stages{display:flex;flex-direction:column}
 .stage{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));column-gap:16px;padding:24px 0;border-top:1px solid rgb(var(--ink) / .08)}
@@ -145,14 +145,14 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 
 /* ================= CASE STUDY ================= */
 .read{max-width:var(--read);margin:0 auto}
-.c-title{margin:0;font-family:var(--script);font-weight:300;font-size:30px;line-height:1.7;letter-spacing:0}
-.c-lede{margin-top:24px;color:rgb(var(--ink) / .55)}
+.c-title{margin:0;font-family:var(--sans);font-weight:500;font-size:34px;line-height:1.15;letter-spacing:-.03em}
+.c-lede{margin-top:14px;color:rgb(var(--ink) / .55)}
 .c-meta{display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));gap:16px;padding:32px 0 40px;border-bottom:1px solid rgb(var(--ink) / .08)}
 .c-meta .k{color:rgb(var(--ink) / .55)}
 .c-meta .v{color:rgb(var(--ink) / .8)}
 .sec{padding-top:64px;scroll-margin-top:32px}
 .sec>.lb{color:rgb(var(--ink) / .55)}
-.sec h2{margin:8px 0 22px;font-family:var(--script);font-weight:300;font-size:22px;line-height:1.65;letter-spacing:0}
+.sec h2{margin:6px 0 14px;font-family:var(--sans);font-weight:500;font-size:24px;line-height:1.25;letter-spacing:-.02em}
 .sec .tx{display:flex;flex-direction:column;gap:12px;color:rgb(var(--ink) / .55)}
 .sec .note{margin-top:14px;font-size:14px;color:rgb(var(--ink) / .45)}
 .dash{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;color:rgb(var(--ink) / .8)}
@@ -166,14 +166,14 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 .box{background:rgb(var(--panel));border-radius:12px;padding:16px 18px;box-shadow:0 0 0 1px rgb(var(--ink) / .05)}
 .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 16px;margin-top:18px}
 .stats .st{border-top:1px solid rgb(var(--ink) / .1);padding-top:12px}
-.stats .v{font-family:var(--serif);font-size:30px;line-height:1.15;letter-spacing:-.02em;color:rgb(var(--ink))}
+.stats .v{font-family:var(--sans);font-weight:500;font-size:28px;line-height:1.15;letter-spacing:-.03em;color:rgb(var(--ink))}
 .stats .l{margin-top:6px;color:rgb(var(--ink) / .8)}
 .stats .s{margin-top:2px;font-size:14px;color:rgb(var(--ink) / .45)}
 .callout{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap}
-.callout b{font-family:var(--serif);font-weight:400;font-size:36px;letter-spacing:-.02em;color:rgb(var(--ink))}
+.callout b{font-family:var(--sans);font-weight:500;font-size:34px;letter-spacing:-.03em;color:rgb(var(--ink))}
 .callout span{flex:1 1 240px;color:rgb(var(--ink) / .8)}
 .insight{padding:28px 24px}
-.insight .q{font-family:var(--serif);font-size:24px;line-height:1.35;letter-spacing:-.015em;color:rgb(var(--ink))}
+.insight .q{font-family:var(--sans);font-weight:500;font-size:22px;line-height:1.35;letter-spacing:-.02em;color:rgb(var(--ink))}
 .insight .d{margin-top:12px;color:rgb(var(--ink) / .7)}
 .cg{display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));gap:10px}
 .cg .box{display:flex;flex-direction:column;gap:6px}
@@ -229,7 +229,7 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 .two .h{color:rgb(var(--ink) / .85);margin-bottom:6px}
 .nextc{display:block;margin-top:96px;padding-top:24px;border-top:1px solid rgb(var(--ink) / .08);text-decoration:none}
 .nextc .k{color:rgb(var(--ink) / .45)}
-.nextc .t{margin-top:8px;font-family:var(--script);font-weight:300;font-size:24px;line-height:1.5;letter-spacing:-.02em;color:rgb(var(--ink));display:flex;align-items:center;gap:10px}
+.nextc .t{margin-top:8px;font-family:var(--sans);font-weight:500;font-size:26px;line-height:1.2;letter-spacing:-.02em;color:rgb(var(--ink));display:flex;align-items:center;gap:10px}
 .nextc:hover .t{color:var(--accent)}
 
 /* ================= PASSWORD GATE ================= */
@@ -239,7 +239,7 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 .gate.shake .gcard{animation:shake .4s}
 @keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
 .gcard .lb{display:flex;align-items:center;gap:8px;color:rgb(var(--ink) / .55)}
-.gcard h2{margin:10px 0 8px;font-family:var(--script);font-weight:300;font-size:22px;line-height:1.45;letter-spacing:0}
+.gcard h2{margin:10px 0 8px;font-family:var(--sans);font-weight:500;font-size:22px;line-height:1.25;letter-spacing:-.02em}
 .gcard .sub{color:rgb(var(--ink) / .55);margin-bottom:20px}
 .gcard .sub b{font-weight:400;color:rgb(var(--ink) / .85)}
 .gfield{display:flex;gap:8px}
@@ -267,7 +267,7 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
   .mtop .crumb a{padding:14px 0}
   .mtop .theme2{width:44px;height:44px;display:grid;place-items:center;color:rgb(var(--ink) / .4);margin-right:-12px}
   .main{margin:0;width:auto;padding:32px 16px 0}
-  .hero{font-size:28px;line-height:1.75;letter-spacing:0}
+  .hero{font-size:34px;line-height:1.15;letter-spacing:-.03em}
   .facts{grid-template-columns:repeat(2,minmax(0,1fr));padding:32px 0 40px}
   .facts .f1,.facts .f2,.facts .f3{grid-column:span 1;max-width:none}
   .work{display:flex;flex-direction:column;align-items:stretch;gap:32px}
@@ -278,8 +278,8 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
   .stage .nm,.stage .bd,.qa dt,.qa dd{grid-column:1/-1}
   .stage .nm{margin-bottom:12px}
   .qa dd{margin-top:-14px}
-  .c-title{font-size:24px;line-height:1.8}
-  .sec h2{font-size:19px}
+  .c-title{font-size:28px}
+  .sec h2{font-size:21px}
 }
 @media (max-width:640px){
   .cg,.stats{grid-template-columns:minmax(0,1fr)!important}
@@ -484,7 +484,7 @@ function viewProcess() {
   const bl = (cls, who, x) => `<div class="bl ${cls}"><span class="${cls === "ai" ? "i80" : "i55"}">${who}</span><span class="tr"><i style="--w:${(x.w / maxW * 100).toFixed(1)}%"></i></span><span class="tm">${x.time}</span></div>`;
   return `<div class="fade">
     <h1 class="ptitle">The traditional design process is an old story. AI changes the game altogether.</h1>
-    <div class="lead" style="margin-top:32px"><p>The old playbook moved in hand-offs: research, then documents, then wireframes, then build — each waiting on the last. Here's how a first release compares, stage by stage, when AI is part of every step.</p></div>
+    <div class="lead" style="margin-top:20px"><p>The old playbook moved in hand-offs: research, then documents, then wireframes, then build — each waiting on the last. Here's how a first release compares, stage by stage, when AI is part of every step.</p></div>
     <div class="sumrow">
       <div class="f"><p class="i55">Traditional</p><p class="big was">~${Math.round(o)} weeks</p></div>
       <div class="f"><p class="i55">With AI</p><p class="big">~${Math.round(a)} weeks</p></div>
