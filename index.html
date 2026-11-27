@@ -142,11 +142,17 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 .qa dd{grid-column:span 5;margin:0;color:rgb(var(--ink) / .55)}
 
 /* ---------- hobbies ---------- */
-.hob{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:56px}
-.hob .hc{display:flex;flex-direction:column;gap:8px}
-.hob .hc .ph2{aspect-ratio:3 / 4;background:#F3F4F6;box-shadow:inset 0 0 0 1px rgb(var(--ink) / .05);display:grid;place-items:center;color:rgb(var(--ink) / .35);font-size:13px;overflow:hidden}
+.hob{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:56px;align-items:start}
+.hob .col{display:flex;flex-direction:column;gap:16px;will-change:transform}
+.hob .col:nth-child(2){margin-top:72px}
+.hob .col:nth-child(3){margin-top:24px}
+.hob .col:nth-child(4){margin-top:120px}
+.hob .hc{display:flex;flex-direction:column;gap:8px;margin:0}
+.hob .hc .ph2{background:#F3F4F6;box-shadow:inset 0 0 0 1px rgb(var(--ink) / .05);display:grid;place-items:center;color:rgb(var(--ink) / .35);font-size:13px;overflow:hidden;border-radius:4px}
 .hob .hc .ph2 img{width:100%;height:100%;object-fit:cover;display:block}
-.hob .hc p{font-size:14px}
+.hob .hc figcaption{font-size:13px;color:rgb(var(--ink) / .55)}
+:root[data-theme="dark"] .hob .hc .ph2{background:#22252A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hob .hc .ph2{background:#22252A}}
 /* ---------- resume ---------- */
 .rbtn{display:inline-flex;align-items:center;gap:8px;margin-top:6px;color:var(--accent)!important;text-decoration:none}
 .rbtn:hover{text-decoration:underline;text-underline-offset:3px}
@@ -155,7 +161,7 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 .sel a{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;text-decoration:none;color:rgb(var(--ink) / .8)}
 .sel a span:last-child{color:rgb(var(--ink) / .45)}
 .sel a:hover span:first-child{color:var(--accent)}
-@media (max-width:640px){.hob{grid-template-columns:repeat(2,minmax(0,1fr))}.skills{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.hob{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.hob .col{gap:12px}.hob .col:nth-child(n){margin-top:0}.hob .col:nth-child(2){margin-top:48px}.skills{grid-template-columns:minmax(0,1fr)}}
 
 /* ---------- footer ---------- */
 .foot{display:flex;flex-wrap:wrap;gap:8px 24px;padding:120px 0 40px;font-size:15px;color:rgb(var(--ink) / .4)}
@@ -380,11 +386,20 @@ const CASES_LOCKED = /*LOCKED*/"ACt8zz112mROBb3vW3BN2GRKdfkbYgEmXr4XdTcOhYY8mBOZ
 /* Hobbies page. Replace the placeholders; add a photo path in img (e.g. "img/hobby-1.jpg") to show a picture. */
 const HOBBIES = {
   intro: "[A line or two about who you are outside work — what you do, play, make or explore.]",
+  /* Photos fill a 4-column, loosely staggered wall. Add as many as you like; ratio is the photo's shape (width / height). */
   items: [
-    { t: "[Hobby one]", img: "" },
-    { t: "[Hobby two]", img: "" },
-    { t: "[Hobby three]", img: "" },
-    { t: "[Hobby four]", img: "" }
+    { t: "[Hobby 1]", img: "", ratio: "3 / 4" },
+    { t: "[Hobby 2]", img: "", ratio: "1 / 1" },
+    { t: "[Hobby 3]", img: "", ratio: "4 / 5" },
+    { t: "[Hobby 4]", img: "", ratio: "3 / 2" },
+    { t: "[Hobby 5]", img: "", ratio: "2 / 3" },
+    { t: "[Hobby 6]", img: "", ratio: "4 / 3" },
+    { t: "[Hobby 7]", img: "", ratio: "1 / 1" },
+    { t: "[Hobby 8]", img: "", ratio: "3 / 4" },
+    { t: "[Hobby 9]", img: "", ratio: "4 / 5" },
+    { t: "[Hobby 10]", img: "", ratio: "2 / 3" },
+    { t: "[Hobby 11]", img: "", ratio: "3 / 2" },
+    { t: "[Hobby 12]", img: "", ratio: "1 / 1" }
   ]
 };
 
@@ -549,11 +564,34 @@ function viewProcess() {
   </div>${footer()}`;
 }
 function viewHobbies() {
+  const n = matchMedia("(max-width:640px)").matches ? 2 : 4;
+  const cols = Array.from({ length: n }, () => []);
+  HOBBIES.items.forEach((h, i) => cols[i % n].push(h));
+  const tile = h => `<figure class="hc"><div class="ph2" style="aspect-ratio:${h.ratio || "3 / 4"}">${h.img ? `<img src="${h.img}" alt="${h.t}" loading="lazy">` : "Photo"}</div><figcaption>${h.t}</figcaption></figure>`;
   return `<div class="fade">
     <div class="lead"><p>${HOBBIES.intro}</p></div>
-    <div class="hob">${HOBBIES.items.map((h, i) => `<div class="hc"><p><span class="i45">${pad(i + 1)}</span> <span class="i25">/</span> <span class="i80">${h.t}</span></p><div class="ph2">${h.img ? `<img src="${h.img}" alt="${h.t}">` : "Photo"}</div></div>`).join("")}</div>
+    <div class="hob">${cols.map(c => `<div class="col">${c.map(tile).join("")}</div>`).join("")}</div>
   </div>${footer()}`;
 }
+/* hobbies wall: each column drifts at its own speed while scrolling */
+(() => {
+  const speeds = [0, -0.12, 0.06, -0.2];
+  let raf = 0;
+  const tick = () => {
+    raf = 0;
+    const wall = document.querySelector(".hob");
+    if (!wall || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const y = Math.min(scrollY, wall.offsetHeight);
+    wall.querySelectorAll(".col").forEach((c, i) => { c.style.transform = `translateY(${(y * speeds[i % 4]).toFixed(1)}px)`; });
+  };
+  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(tick); }, { passive: true });
+  let lastN = matchMedia("(max-width:640px)").matches ? 2 : 4;
+  addEventListener("resize", () => {
+    const n = matchMedia("(max-width:640px)").matches ? 2 : 4;
+    if (n !== lastN && location.hash.startsWith("#/hobbies")) dispatchEvent(new HashChangeEvent("hashchange"));
+    lastN = n;
+  });
+})();
 function viewResume() {
   return `<div class="fade">
     <div class="lead"><p>${RESUME.summary}</p>
