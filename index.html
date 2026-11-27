@@ -452,7 +452,7 @@ const card = p => `
   </a>`;
 
 /* ---------- chrome (sidebar + mobile bar) ---------- */
-const NAV = [["Work", "#/", "work"], ["Process", "#/process", "process"], ["About", "#/about", "about"]];
+const NAV = [["Work", "#/", "work"], ["About", "#/about", "about"]];
 function chrome(view, p) {
   if (view === "case") {
     const crumb = `<div class="crumb"><a href="#/">${BACK}Work</a><span class="i25">/</span><span class="cur">${p.title}</span></div>`;
@@ -601,7 +601,6 @@ function route() {
     show("case", viewCase(PROJECTS[i], i), `${PROJECTS[i].title} — ${SITE.name}`, PROJECTS[i]);
     return;
   }
-  if (h.startsWith("#/process")) return show("process", viewProcess(), `Process — ${SITE.name}`);
   if (h.startsWith("#/about")) return show("about", viewAbout(), `About — ${SITE.name}`);
   show("work", viewWork(), `${SITE.name} — AI-Enabled Product Builder`);
 }
