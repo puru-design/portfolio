@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Purushotham — AI-Enabled Product Builder</title>
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" id="favicon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="description" content="Purushotham is an AI-enabled product builder with 8+ years of taking products from idea to launch.">
@@ -460,7 +460,18 @@ const SUN = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke=
     const next = dark ? "light" : "dark";
     document.documentElement.dataset.theme = next;
     try { localStorage.setItem("theme", next); } catch {}
+    syncIcon();
   };
+  /* favicon hexagon follows the site's theme: light #2563EB, dark #6B9BFF */
+  const syncIcon = () => {
+    const th = document.documentElement.dataset.theme;
+    const dark = th ? th === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    const c = dark ? "#6B9BFF" : "#2563EB";
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><polygon points="16,2 28.1,9 28.1,23 16,30 3.9,23 3.9,9" fill="${c}" stroke="${c}" stroke-width="2" stroke-linejoin="round"/></svg>`;
+    const l = document.getElementById("favicon"); if (l) l.href = "data:image/svg+xml," + encodeURIComponent(svg);
+  };
+  syncIcon();
+  try { matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncIcon); } catch {}
   $("#themeBtn").innerHTML = SUN; $("#themeBtn").onclick = flip;
   window.__flipTheme = flip;
 })();
