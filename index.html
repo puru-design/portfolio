@@ -142,7 +142,10 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 .qa dd{grid-column:span 5;margin:0;color:rgb(var(--ink) / .55)}
 
 /* ---------- hobbies ---------- */
-.hob{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:56px;padding-bottom:120px;align-items:start}
+.hob{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:56px;align-items:start}
+.hlinks{display:flex;gap:24px;padding:120px 0 40px;font-size:15px}
+.hlinks a{text-decoration:none;color:rgb(var(--ink) / .55)}
+.hlinks a:hover{color:var(--accent)}
 .hob .col{display:flex;flex-direction:column;gap:16px;will-change:transform}
 .hob .col:nth-child(2){margin-top:72px}
 .hob .col:nth-child(3){margin-top:24px}
@@ -385,6 +388,11 @@ const CASES_LOCKED = /*LOCKED*/"ACt8zz112mROBb3vW3BN2GRKdfkbYgEmXr4XdTcOhYY8mBOZ
 /* Experience on the About page. Add earlier roles as { when, org, role }. */
 /* Hobbies page. Replace the placeholders; add a photo path in img (e.g. "img/hobby-1.jpg") to show a picture. */
 const HOBBIES = {
+  /* Text links at the bottom of the Hobbies page. Paste your profile URLs here. */
+  links: [
+    { t: "Instagram", url: "" },
+    { t: "YouTube", url: "" }
+  ],
   intro: "[A line or two about who you are outside work — what you do, play, make or explore.]",
   /* Photos fill a 4-column, loosely staggered wall. Add as many as you like; ratio is the photo's shape (width / height). */
   items: [
@@ -571,6 +579,7 @@ function viewHobbies() {
   return `<div class="fade">
     <div class="lead"><p>${HOBBIES.intro}</p></div>
     <div class="hob">${cols.map(c => `<div class="col">${c.map(tile).join("")}</div>`).join("")}</div>
+    <div class="hlinks">${HOBBIES.links.map(l => `<a href="${l.url || "#"}"${l.url ? ' target="_blank" rel="noopener"' : ""}>${l.t}</a>`).join("")}</div>
   </div>`;
 }
 /* hobbies wall: each column drifts at its own speed while scrolling */
