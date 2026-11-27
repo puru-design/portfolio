@@ -142,7 +142,7 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 .qa dd{grid-column:span 5;margin:0;color:rgb(var(--ink) / .55)}
 
 /* ---------- hobbies ---------- */
-.hob{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:56px;align-items:start}
+.hob{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:56px;padding-bottom:120px;align-items:start}
 .hob .col{display:flex;flex-direction:column;gap:16px;will-change:transform}
 .hob .col:nth-child(2){margin-top:72px}
 .hob .col:nth-child(3){margin-top:24px}
@@ -571,7 +571,7 @@ function viewHobbies() {
   return `<div class="fade">
     <div class="lead"><p>${HOBBIES.intro}</p></div>
     <div class="hob">${cols.map(c => `<div class="col">${c.map(tile).join("")}</div>`).join("")}</div>
-  </div>${footer()}`;
+  </div>`;
 }
 /* hobbies wall: each column drifts at its own speed while scrolling */
 (() => {
