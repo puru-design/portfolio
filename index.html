@@ -497,7 +497,7 @@ function chrome(view, p) {
     return;
   }
   const links = NAV.map(([t, h, v]) => `<a class="nl${v === view ? " on" : ""}" href="${h}"${v === view ? ' aria-current="page"' : ""}>${t}</a>`).join("");
-  side.innerHTML = `<a class="home" href="#/">${SITE.name}</a><nav aria-label="Main">${links}</nav>`;
+  side.innerHTML = `<nav aria-label="Main">${links}</nav>`;
   mtop.innerHTML = `<nav aria-label="Main">${links}</nav><button class="theme2" aria-label="Switch light or dark theme" onclick="__flipTheme()">${SUN}</button>`;
 }
 const footer = () => `<footer class="foot"><a href="mailto:${SITE.email}">Email</a><span class="sp"></span><span>© ${new Date().getFullYear()} ${SITE.name}</span><span>${SITE.location} <span id="clock"></span></span></footer>`;
