@@ -9,5 +9,6 @@ Single-file static site (`index.html`), deployed by Netlify from `main`. No buil
   1. `node tools/lock.mjs decrypt <password>` → writes `private/cases.json`
   2. edit `private/cases.json` (keyed by project `slug`)
   3. `node tools/lock.mjs encrypt <password>` → re-locks into `index.html`
+- Exception: projects with `open: true` (currently Monnai) are public by request — their case content lives in plain text in `CASES_OPEN` in `index.html`, not in `private/cases.json`.
 - Never commit `private/` (it is git-ignored) and never put case-study details in plain text in `index.html` — the repo is public.
 - Images placed in the repo are public; only text inside `CASES_LOCKED` is protected.
